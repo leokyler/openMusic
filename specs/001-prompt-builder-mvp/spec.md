@@ -5,6 +5,15 @@
 **Status**: Draft  
 **Input**: User description: "创建一个 MVP 系统，用于生成、验证和存储结构化的 AI 音乐提示词，基于 Minimax 音频生成模型的参数定义（lyrics, style, vocal, instrumental），并实现基本的输出追踪功能"
 
+## Terminology
+
+本文档使用以下核心术语：
+
+- **提示词 (Prompt)**: 用于 AI 音乐生成的结构化输入文本，包含歌词、风格、人声和器乐四个组成部分
+- **输出 (Output)**: AI 模型基于提示词生成的音乐结果，包括音频文件 URL 和生成参数
+- **章节标签 (Section Tag)**: 歌词中的结构标记，如 [Verse]、[Chorus]、[Bridge] 等
+- **质量评分 (Quality Score)**: 系统根据提示词结构完整性计算的评级，包括 High（高）、Medium（中）、Low（低）三个等级
+
 ## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Create Structured Prompt (Priority: P1)
@@ -70,7 +79,24 @@
 ### Functional Requirements
 
 - **FR-001**: System MUST 提供表单界面用于创建结构化提示词，包含 lyrics（歌词）、style（风格）、vocal（人声参数）、instrumental（器乐配置）四个主要组件
-- **FR-002**: System SHOULD 检查 lyrics 组件是否包含标准章节标签（[Verse]、[Chorus]、[Bridge]、[Intro]、[Outro]、[Hook]、[Drop]、[Solo]、[Build-up]、[Instrumental]、[Breakdown]、[Break]、[Interlude]），缺少时显示警告但不阻止保存
+- **FR-002**: System SHOULD 检查 lyrics 组件是否包含标准章节标签，缺少时显示警告但不阻止保存
+
+  **支持的章节标签清单（共 14 种）**:
+  1. `[Verse]` - 主歌
+  2. `[Chorus]` - 副歌/合唱
+  3. `[Bridge]` - 桥段
+  4. `[Intro]` - 引入/前奏
+  5. `[Outro]` - 结尾/尾奏
+  6. `[Pre-Chorus]` - 预副歌
+  7. `[Hook]` - 钩子段
+  8. `[Drop]` - 降调段（EDM 常用）
+  9. `[Solo]` - 独奏段
+  10. `[Build-up]` - 递增段/渐强
+  11. `[Instrumental]` - 纯器乐段
+  12. `[Breakdown]` - 分解段/简化段
+  13. `[Break]` - 间断段
+  14. `[Interlude]` - 间奏/过渡段
+
 - **FR-003**: System SHOULD 警告用户 lyrics 超过 3500 字符或 style 超过 2000 字符（参考 Minimax 限制），但允许保存
 - **FR-004**: System MUST 为每个保存的提示词生成唯一 ID 和时间戳
 - **FR-005**: System MUST 使用 JSON Schema 验证提示词数据结构，验证不通过时显示清晰的警告消息，但允许用户选择仍然保存
@@ -81,6 +107,30 @@
 - **FR-009**: System MUST 在提示词和输出之间建立双向关联，提示词可以查看关联的输出，输出可以追溯到源提示词
 - **FR-010**: System MUST 为所有 API 响应使用一致的 JSON 格式，包含成功/失败状态和数据/错误信息
 - **FR-011**: System MUST 为每个提示词计算并存储质量评分（高/中/低），基于结构完整性、标签使用、字段完整度等因素
+
+  **质量评分算法规则**（详细实现见 `research.md`）:
+
+  **基础规则**: lyrics 或 style 至少一个存在（否则拒绝保存）
+
+  **评分组成**:
+  - **Lyrics 评分（40 分）**:
+    - 包含 3+ 章节标签: +40 分
+    - 包含 1-2 章节标签: +20 分
+    - 长度 ≤3500 字符: 不扣分，>3500: -10 分
+  - **Style 评分（30 分）**:
+    - 长度 >50 字符: +30 分
+    - 长度 10-50 字符: +15 分
+    - 长度 >2000 字符: -10 分
+  - **Vocal 评分（15 分）**: 存在即 +15 分
+  - **Instrumental 评分（15 分）**: 存在即 +15 分
+
+  **最终评级**:
+  - **High (高质量)**: ≥80 分
+  - **Medium (中等质量)**: 50-79 分
+  - **Low (低质量)**: <50 分
+
+  质量评分用于引导用户采用最佳实践，不阻止低质量提示词保存。
+
 - **FR-012**: System SHOULD 在 UI 中显示提示词的质量指示器，帮助用户识别高质量提示词以获得更稳定的生成结果
 
 ### Key Entities
@@ -127,8 +177,11 @@
 - 初始版本不包含用户认证，所有提示词公开访问（后续版本添加）
 - 使用关系型数据库存储结构化数据
 - 质量评分算法可以在后续版本中优化，初期使用简单规则（标签数量、字段完整度等）
+- **测试策略**: 虽然功能需求中未明确要求具体测试任务，但系统化测试（单元测试、集成测试、E2E 测试）属于软件工程最佳实践，将在实施计划和任务分解中体现
 
 ## Out of Scope (Not in MVP)
+
+### 功能特性
 
 - 用户认证和权限管理
 - 提示词版本控制和历史记录
@@ -138,3 +191,13 @@
 - 音频文件的实际存储和播放
 - 提示词分享和协作功能
 - 高级搜索和过滤功能
+
+### 文档和工程实践
+
+以下内容属于项目交付物和工程最佳实践，不属于功能需求范围，将在实施阶段体现：
+
+- 项目文档（README.md、API 文档、部署指南）
+- 开发环境配置文件和工具链设置
+- 代码质量工具（ESLint、Prettier、类型检查）
+- 测试套件（单元测试、集成测试、E2E 测试）
+- CI/CD 流程和自动化脚本
