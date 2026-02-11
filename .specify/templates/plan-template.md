@@ -29,9 +29,37 @@
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: 必须在 Phase 0 研究前通过。Phase 1 设计后重新检查。_
 
-[Gates determined based on constitution file]
+**Structured Prompt Design**:
+
+- [ ] 功能涉及提示词 schema 定义或修改
+- [ ] Schemas 包含所有必需组件（lyrics, style, vocal, instrumental, structural）
+- [ ] 定义了歌词结构的章节标签（[Verse]、[Chorus]、[Bridge] 等）
+
+**Output Traceability**:
+
+- [ ] 元数据模型包含提示词版本、时间戳、模型参数
+- [ ] 指定了提示词与输出之间的双向链接
+- [ ] Association 记录在设计中是不可变的
+
+**Schema Validation**:
+
+- [ ] 为所有提示词组件定义了 JSON schemas
+- [ ] 在生成请求前指定验证逻辑
+- [ ] 验证失败的错误消息清晰明确
+
+**Version Control**:
+
+- [ ] Schema/提示词版本号遵循语义化版本控制（MAJOR.MINOR.PATCH）
+- [ ] 破坏性变更包含迁移指南
+- [ ] 版本元数据与所有提示词关联
+
+**Text-Based Workflow**:
+
+- [ ] 提示词格式使用 JSON、YAML 或 Markdown
+- [ ] 支持可组合性（片段组合成完整提示词）
+- [ ] 指定了 CLI 或程序化接口
 
 ## Project Structure
 
@@ -48,6 +76,7 @@ specs/[###-feature]/
 ```
 
 ### Source Code (repository root)
+
 <!--
   ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
   for this feature. Delete unused options and expand the chosen structure with
@@ -98,7 +127,7 @@ directories captured above]
 
 > **Fill ONLY if Constitution Check has violations that must be justified**
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+| Violation                  | Why Needed         | Simpler Alternative Rejected Because |
+| -------------------------- | ------------------ | ------------------------------------ |
+| [e.g., 4th project]        | [current need]     | [why 3 projects insufficient]        |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient]  |
