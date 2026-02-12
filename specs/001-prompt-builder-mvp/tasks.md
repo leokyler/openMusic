@@ -242,24 +242,24 @@ description: 'Implementation tasks for Structured Prompt Builder MVP'
 
 ### Performance & Optimization
 
-- [ ] T049 [P] 验证 Schema 验证性能 <200ms（SC-002）- 添加性能测试 tests/unit/validation-performance.test.ts
-- [ ] T050 [P] 验证列表页加载 <1s/100 条记录（SC-003）- 添加性能基准测试
-- [ ] T051 优化数据库查询，确保支持 10k+ 提示词（SC-004）
+- [x] T049 [P] 验证 Schema 验证性能 <200ms（SC-002）- 添加性能测试 tests/unit/validation-performance.test.ts
+- [x] T050 [P] 验证列表页加载 <1s/100 条记录（SC-003）- 添加性能基准测试
+- [x] T051 优化数据库查询，确保支持 10k+ 提示词（SC-004）
   - 检查索引有效性
   - 添加查询性能监控
 
 ### User Experience
 
-- [ ] T052 [P] 改进全局样式和主题 app/globals.css
-- [ ] T053 [P] 添加响应式布局优化（移动端适配）
-- [ ] T054 添加加载动画和骨架屏到所有列表和详情页面
-- [ ] T055 [P] 改进错误消息清晰度（SC-005）- 确保 90% 用户无需文档理解
+- [x] T052 [P] 改进全局样式和主题 app/globals.css
+- [x] T053 [P] 添加响应式布局优化（移动端适配）
+- [x] T054 添加加载动画和骨架屏到所有列表和详情页面
+- [x] T055 [P] 改进错误消息清晰度（SC-005）- 确保 90% 用户无需文档理解
 
 ### Documentation
 
-- [ ] T056 [P] 创建 README.md 添加项目概述、安装和运行说明
-- [ ] T057 [P] 验证 quickstart.md 的所有步骤可执行
-- [ ] T058 [P] 添加 API 文档链接到 contracts/prompts.openapi.yaml
+- [x] T056 [P] 创建 README.md 添加项目概述、安装和运行说明
+- [x] T057 [P] 验证 quickstart.md 的所有步骤可执行
+- [x] T058 [P] 添加 API 文档链接到 contracts/prompts.openapi.yaml
 
 ### Code Quality
 

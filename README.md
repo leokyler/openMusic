@@ -1,6 +1,10 @@
-# openMusic Prompt Builder MVP
+# OpenMusic - Structured Prompt Builder
 
-基于 Next.js 的结构化 AI 音乐提示词管理系统，支持 Minimax 音频生成模型的提示词创建、验证和输出追踪。
+基于 Next.js 的结构化 AI 音乐提示词管理系统，专为 Minimax 音频生成模型设计。
+
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.1-black)](https://nextjs.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ## 功能特性
 
@@ -96,22 +100,36 @@ openMusic/
 
 ## API 文档
 
-详细的 API 规范请查看 [specs/001-prompt-builder-mvp/contracts/prompts.openapi.yaml](./specs/001-prompt-builder-mvp/contracts/prompts.openapi.yaml)
+详细的 OpenAPI 规范：[specs/001-prompt-builder-mvp/contracts/prompts.openapi.yaml](./specs/001-prompt-builder-mvp/contracts/prompts.openapi.yaml) ⚡
 
 ### 主要端点
 
-- `POST /api/prompts` - 创建提示词
-- `GET /api/prompts` - 获取提示词列表（支持分页和过滤）
-- `GET /api/prompts/:id` - 获取提示词详情
-- `POST /api/prompts/:id/outputs` - 关联音频输出
-- `GET /api/prompts/:id/outputs` - 获取提示词的输出列表
+| 方法 | 端点                       | 描述                             |
+| ---- | -------------------------- | -------------------------------- |
+| POST | `/api/prompts`             | 创建提示词                       |
+| GET  | `/api/prompts`             | 获取列表（支持分页、过滤、排序） |
+| GET  | `/api/prompts/:id`         | 获取详情                         |
+| POST | `/api/prompts/:id/outputs` | 关联音频输出                     |
+| GET  | `/api/prompts/:id/outputs` | 获取输出列表                     |
 
 ## 开发指南
 
 ### 运行测试
 
 ```bash
-# 单元测试
+# 单元测试（不需要数据库）
+pnpm test tests/unit/quality-scorer.test.ts
+pnpm test tests/unit/validation-performance.test.ts
+
+# 性能测试（需要数据库连接）
+# 1. 配置测试数据库
+cp .env.test.example .env.test
+# 编辑 .env.test，设置 DATABASE_URL
+
+# 2. 运行性能测试
+DATABASE_URL="postgresql://USER:PASS@localhost:5432/openmusic_test" pnpm test tests/unit/list-performance.test.ts
+
+# 运行所有测试
 pnpm test
 
 # 监听模式
@@ -231,4 +249,4 @@ MIT
 
 ---
 
-**开发状态**: MVP (Phase 1-5 完成，Phase 6 进行中)
+**开发状态**: ✅ MVP 完成（Phase 1-6） | **版本**: 1.0.0 | **日期**: 2026-02-12
