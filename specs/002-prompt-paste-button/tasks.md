@@ -217,44 +217,53 @@
 
 ### Form Page Integration Tasks
 
+- [x] T013 [P] Implement copyToClipboard utility function with clipboard.js integration
+      File: `lib/clipboard.ts`
+      Functions: `copyToClipboard(text, options)`, `formatPromptForCopy(prompt)`
+      Features: clipboard.js initialization, fallback to execCommand, success/error callbacks
+      Verify: Function returns Clipboard instance, handles errors gracefully
+- [x] T014 Implement formatPromptForCopy utility to format prompt with English labels
+      File: `lib/clipboard.ts`
+      Logic: Only include filled fields, use English labels (lyrics, style, vocal, instrumental)
+      Output: Formatted string with field labels and content separated by newlines
+      Verify: Output matches specification in data-model.md
+
 - [x] T015 [P] Create CopyPromptButton reusable component with icon and label variants
       File: `components/prompt/CopyPromptButton.tsx`
       Props: `prompt: Partial<Prompt>`, `variant?: 'icon-only' | 'with-label'`
       Features: Copy icon, success state (Check icon), disabled state, keyboard accessible
       Verify: Component renders button, accepts props, has proper ARIA labels
-
 - [x] T016 Add loading state to CopyPromptButton during copy operation
       File: `components/prompt/CopyPromptButton.tsx`
       State: `tracking: boolean` to disable button during async copy
       UI: Show loading spinner or disabled state when copying
       Verify: Button disabled during copy operation, re-enables after completion
-
 - [x] T017 Implement success Toast notification after successful copy operation
       File: `components/prompt/CopyPromptButton.tsx`
       UI: "已复制到剪贴板" message, auto-dismiss after 2 seconds
       Verify: Toast appears on success, disappears after timeout
-
 - [x] T018 Add error handling for clipboard permission denial
       File: `components/prompt/CopyPromptButton.tsx`
       UI: Error message with manual copy instructions when clipboard access denied
       Verify: Error Toast displayed when permission rejected, includes manual instructions
-
 - [x] T019 [P] Implement keyboard accessibility attributes on CopyPromptButton
       File: `components/prompt/CopyPromptButton.tsx`
       Attributes: `aria-label="复制提示词到剪贴板"`, `type="button"`, visible focus styles
       Verify: Tab navigates to button, Enter/Space triggers copy, focus outline visible
-
 - [x] T020 Add validation to prevent copy when all prompt fields are empty
       File: `components/prompt/CopyPromptButton.tsx`
       Logic: Check if at least one field (lyrics, style, vocal, instrumental) has content
       UI: Show error Toast "请先填写提示词内容" if all fields empty
       Verify: Copy button disabled or shows error when all fields empty
-
-- [x] T021 Integrate CopyPromptButton into prompt form page bottom action area
-      File: `app/prompts/new/page.tsx`
-      Location: Below form fields, in action section
-      Variant: `with-label` to show "复制" text alongside icon
-      Verify: Button visible on form page, properly positioned
+- [x] T021 **Integrate CopyPromptButton into PromptForm component**
+      File: `components/prompt/PromptForm.tsx`
+      Changes: Add `showCopyButton`, `onCopyDataChange` props to PromptForm
+      Add `getCurrentFormData()` function to expose real-time form data
+      Add useEffect to notify parent when form data changes
+      Integrate CopyPromptButton inline with submit button
+      Location: Within form, alongside submit button (bottom of form)
+      Variant: `with-label` to show "复制" text
+      Verify: Copy button visible in form, can copy while typing, better UX
 
 ### API Integration Tasks
 

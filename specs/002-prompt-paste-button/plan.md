@@ -94,18 +94,20 @@ Based on existing Next.js App Router structure from feature 001 (without src dir
 app/
 ├── prompts/
 │   ├── [id]/              # Prompt detail page
-│   │   └── page.tsx      # Add copy button
+│   │   └── page.tsx      # Add copy button to header and bottom
 │   └── new/              # Prompt form page
-│       └── page.tsx        # Add copy button
+│       └── page.tsx        # Integrate copy button into form
 └── api/
     └── prompts/
         └── [id]/
-            └── copy/route.ts  # POST /api/prompts/:id/copy (track copy metrics)
+            └── copy/route.ts # POST /api/prompts/:id/copy (track copy metrics)
+
 components/
 ├── prompt/
 │   ├── CopyPromptButton.tsx     # New: Reusable copy button component
-│   └── PromptForm.tsx           # Modify: Add copy button to form
+│   └── PromptForm.tsx           # Modify: Integrate copy button inline with submit button
 └── ui/                          # Existing shadcn/ui components
+
 lib/
 ├── clipboard.ts                    # New: Clipboard utilities (Clipboard API + fallback)
 ├── prompt-formatter.ts            # New: Format prompt for copy (English labels)
@@ -128,6 +130,12 @@ tests/
 ```
 
 **Structure Decision**: 采用 Option 2 (Web application)，因为项目使用 Next.js 全栈架构。本功能主要在 frontend 层实现 UI 组件和剪贴板逻辑，backend 层添加复制追踪 API 端点。数据模型扩展现有 Prisma schema。
+
+**优化（2026-02-12）**:
+
+- 将 CopyPromptButton 直接集成到 PromptForm 组件内部，而不是在页面层面
+- 用户可以在填写表单时实时复制内容，无需等待提交后才能复制
+- 简化数据流：PromptForm 自己管理状态，通过 getCurrentFormData 函数暴露给复制按钮使用
 
 ## Complexity Tracking
 
