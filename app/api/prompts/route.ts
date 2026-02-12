@@ -6,6 +6,8 @@ import { promptService } from '@/lib/services/prompt.service';
 import { validatePromptCreate } from '@/lib/middleware/validation';
 import { handleError } from '@/lib/middleware/error-handler';
 import { createdResponse, successResponse } from '@/lib/utils/api-response';
+import { parseEnumParam } from '@/lib/utils/api-params';
+import type { PromptListOptions, QualityScore } from '@/lib/types/prompt';
 
 export async function POST(request: Request) {
   try {
@@ -28,7 +30,6 @@ export async function POST(request: Request) {
  * GET /api/prompts
  * 获取提示词列表（支持分页和过滤）
  */
-import type { PromptListOptions } from '@/lib/types/prompt';
 
 export async function GET(request: Request) {
   try {
@@ -37,9 +38,13 @@ export async function GET(request: Request) {
     const options: PromptListOptions = {
       page: parseInt(searchParams.get('page') || '1'),
       pageSize: parseInt(searchParams.get('pageSize') || '20'),
-      qualityScore: (searchParams.get('qualityScore') as any) || undefined,
-      sortBy: (searchParams.get('sortBy') as any) || 'createdAt',
-      sortOrder: (searchParams.get('sortOrder') as any) || 'desc',
+      qualityScore: parseEnumParam<QualityScore>(searchParams.get('qualityScore'), [
+        'high',
+        'medium',
+        'low',
+      ]),
+      sortBy: parseEnumParam(searchParams.get('sortBy'), ['createdAt', 'updatedAt']),
+      sortOrder: parseEnumParam(searchParams.get('sortOrder'), ['asc', 'desc']),
     };
 
     // 获取列表
