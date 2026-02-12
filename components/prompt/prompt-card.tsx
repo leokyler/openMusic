@@ -36,8 +36,8 @@ function truncateText(text: string | null, maxLength: number = 100): string {
 
 export function PromptCard({ prompt }: PromptCardProps) {
   return (
-    <Link href={`/prompts/${prompt.id}`}>
-      <div className="group bg-white p-5 rounded-lg border hover:shadow-md transition-shadow cursor-pointer">
+    <Link href={`/prompts/${prompt.id}`} className="h-full">
+      <div className="group bg-white p-5 rounded-lg border hover:shadow-md transition-shadow cursor-pointer h-full flex flex-col">
         {/* 头部：质量和日期 */}
         <div className="flex items-start justify-between mb-3">
           <QualityBadge score={prompt.qualityScore} />
@@ -66,12 +66,12 @@ export function PromptCard({ prompt }: PromptCardProps) {
         <div className="flex gap-2 text-xs text-gray-500 mb-3">
           {prompt.vocal && (
             <span className="bg-blue-50 px-2 py-1 rounded">
-              人声: {(prompt.vocal as any).gender || '已设置'}
+              人声: {prompt.vocal.gender || '已设置'}
             </span>
           )}
           {prompt.instrumental && (
             <span className="bg-purple-50 px-2 py-1 rounded">
-              器乐: {(prompt.instrumental as any).bpm || '已设置'} BPM
+              器乐: {prompt.instrumental.bpm || '已设置'} BPM
             </span>
           )}
         </div>
@@ -84,10 +84,8 @@ export function PromptCard({ prompt }: PromptCardProps) {
         )}
 
         {/* 底部：输出数量 */}
-        <div className="flex items-center justify-between mt-4 pt-3 border-t">
-          <span className="text-xs text-gray-500">
-            {(prompt as any).outputCount || 0} 个关联输出
-          </span>
+        <div className="flex items-center justify-between mt-4 pt-3 border-t mt-auto">
+          <span className="text-xs text-gray-500">{prompt.outputs?.length || 0} 个关联输出</span>
           <span className="text-sm text-blue-600 group-hover:underline">查看详情 →</span>
         </div>
       </div>
