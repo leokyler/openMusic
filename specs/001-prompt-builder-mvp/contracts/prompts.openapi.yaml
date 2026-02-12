@@ -1,0 +1,647 @@
+openapi: 3.1.0
+info:
+  title: openMusic Prompt Builder API
+  version: 1.0.0
+  description: |
+    openMusic MVP API - 结构化 AI 音乐提示词管理系统
+
+    ## 特性
+    - 创建和检索结构化提示词
+    - 质量评分和警告反馈
+    - 输出追踪和关联
+
+    ## 认证
+    MVP 阶段无需认证
+
+servers:
+  - url: http://localhost:3000
+    description: 本地开发环境
+  - url: https://openmusic.vercel.app
+    description: 生产环境
+
+paths:
+  /api/prompts:
+    get:
+      summary: 获取提示词列表
+      description: 分页获取所有提示词，支持质量过滤和排序
+      operationId: listPrompts
+      tags:
+        - Prompts
+      parameters:
+        - name: page
+          in: query
+          description: 页码（从 1 开始）
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: pageSize
+          in: query
+          description: 每页数量
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: qualityScore
+          in: query
+          description: 按质量过滤
+          schema:
+            type: string
+            enum: [high, medium, low]
+        - name: sortBy
+          in: query
+          description: 排序字段
+          schema:
+            type: string
+            enum: [createdAt, updatedAt]
+            default: createdAt
+        - name: sortOrder
+          in: query
+          description: 排序方向
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+      responses:
+        '200':
+          description: 成功返回提示词列表
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, data]
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    required: [items, page, pageSize, total, totalPages]
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Prompt'
+                      page:
+                        type: integer
+                        example: 1
+                      pageSize:
+                        type: integer
+                        example: 20
+                      total:
+                        type: integer
+                        example: 45
+                      totalPages:
+                        type: integer
+                        example: 3
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+              examples:
+                success:
+                  summary: 成功响应示例
+                  value:
+                    success: true
+                    data:
+                      items:
+                        - id: '550e8400-e29b-41d4-a716-446655440000'
+                          version: '1.0.0'
+                          lyrics: "[Verse 1]\n在夜空下徘徊\n\n[Chorus]\n星光闪耀"
+                          style: 'Pop, Acoustic, 80-90 BPM'
+                          vocal:
+                            gender: 'female'
+                            timbre: '温暖'
+                          instrumental:
+                            instruments: ['acoustic guitar', 'piano']
+                            bpm: 85
+                          qualityScore: 'high'
+                          qualityWarnings: []
+                          outputCount: 2
+                          createdAt: '2026-02-11T10:30:00Z'
+                          updatedAt: '2026-02-11T10:30:00Z'
+                      page: 1
+                      pageSize: 20
+                      total: 1
+                      totalPages: 1
+                    meta:
+                      timestamp: '2026-02-11T10:35:00Z'
+                      version: '1.0.0'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    post:
+      summary: 创建新提示词
+      description: 创建结构化提示词，自动计算质量评分
+      operationId: createPrompt
+      tags:
+        - Prompts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePromptRequest'
+            examples:
+              minimal:
+                summary: 最小提示词（仅歌词）
+                value:
+                  lyrics: "[Verse]\n简单的歌词"
+              complete:
+                summary: 完整提示词
+                value:
+                  lyrics: "[Verse 1]\n在夜空下徘徊\n寻找失去的光彩\n\n[Chorus]\n星光闪耀，照亮前方\n勇敢前行，不再迷茫"
+                  style: 'Pop, Acoustic, Emotional, 80-100 BPM, Female Vocals'
+                  vocal:
+                    gender: 'female'
+                    timbre: '清澈、温暖'
+                    style: '抒情'
+                  instrumental:
+                    instruments: ['acoustic guitar', 'piano', 'light percussion']
+                    bpm: 90
+      responses:
+        '201':
+          description: 提示词创建成功
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, data]
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Prompt'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+              examples:
+                highQuality:
+                  summary: 高质量提示词
+                  value:
+                    success: true
+                    data:
+                      id: '550e8400-e29b-41d4-a716-446655440000'
+                      version: '1.0.0'
+                      lyrics: "[Verse 1]\n在夜空下徘徊\n\n[Chorus]\n星光闪耀"
+                      style: 'Pop, Acoustic'
+                      vocal:
+                        gender: 'female'
+                      instrumental:
+                        instruments: ['guitar']
+                      qualityScore: 'high'
+                      qualityWarnings: []
+                      createdAt: '2026-02-11T10:30:00Z'
+                      updatedAt: '2026-02-11T10:30:00Z'
+                    meta:
+                      timestamp: '2026-02-11T10:30:00Z'
+                      version: '1.0.0'
+                lowQuality:
+                  summary: 低质量提示词（有警告）
+                  value:
+                    success: true
+                    data:
+                      id: '660e8400-e29b-41d4-a716-446655440001'
+                      version: '1.0.0'
+                      lyrics: '简单歌词'
+                      style: null
+                      vocal: null
+                      instrumental: null
+                      qualityScore: 'low'
+                      qualityWarnings:
+                        - '缺少章节标签，建议使用 [Verse]、[Chorus] 等'
+                        - '建议添加风格描述'
+                        - '建议添加人声参数'
+                        - '建议添加器乐配置'
+                      createdAt: '2026-02-11T10:31:00Z'
+                      updatedAt: '2026-02-11T10:31:00Z'
+                    meta:
+                      timestamp: '2026-02-11T10:31:00Z'
+                      version: '1.0.0'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/prompts/{id}:
+    get:
+      summary: 获取提示词详情
+      description: 根据 ID 获取单个提示词及其关联的输出
+      operationId: getPrompt
+      tags:
+        - Prompts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 提示词 UUID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 成功返回提示词详情
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, data]
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/PromptDetail'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+              examples:
+                withOutputs:
+                  summary: 带输出的提示词
+                  value:
+                    success: true
+                    data:
+                      id: '550e8400-e29b-41d4-a716-446655440000'
+                      version: '1.0.0'
+                      lyrics: "[Verse]\n测试歌词"
+                      style: 'Pop'
+                      vocal: null
+                      instrumental: null
+                      qualityScore: 'medium'
+                      qualityWarnings: ['建议添加人声参数']
+                      outputs:
+                        - id: '770e8400-e29b-41d4-a716-446655440002'
+                          audioUrl: 'https://example.com/audio1.mp3'
+                          modelVersion: 'Music-2.5'
+                          generationParams:
+                            seed: 12345
+                          createdAt: '2026-02-11T11:00:00Z'
+                      createdAt: '2026-02-11T10:30:00Z'
+                      updatedAt: '2026-02-11T10:30:00Z'
+                    meta:
+                      timestamp: '2026-02-11T11:05:00Z'
+                      version: '1.0.0'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/prompts/{id}/outputs:
+    get:
+      summary: 获取提示词的所有输出
+      description: 获取与特定提示词关联的所有音频输出
+      operationId: listPromptOutputs
+      tags:
+        - Outputs
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 提示词 UUID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 成功返回输出列表
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, data]
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Output'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    post:
+      summary: 关联新输出
+      description: 将 Minimax 生成的音频输出关联到提示词
+      operationId: createOutput
+      tags:
+        - Outputs
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 提示词 UUID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOutputRequest'
+            examples:
+              basic:
+                summary: 基本输出
+                value:
+                  audioUrl: 'https://file.hailuoai.com/audio/123456.mp3'
+              withParams:
+                summary: 带生成参数
+                value:
+                  audioUrl: 'https://file.hailuoai.com/audio/123456.mp3'
+                  modelVersion: 'Music-2.5'
+                  generationParams:
+                    seed: 42
+                    temperature: 0.8
+      responses:
+        '201':
+          description: 输出关联成功
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, data]
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Output'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+components:
+  schemas:
+    Prompt:
+      type: object
+      required: [id, version, qualityScore, qualityWarnings, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: 提示词唯一标识
+        version:
+          type: string
+          description: 语义化版本号
+          example: '1.0.0'
+        lyrics:
+          type: string
+          nullable: true
+          maxLength: 3500
+          description: 歌词（支持章节标签）
+        style:
+          type: string
+          nullable: true
+          maxLength: 2000
+          description: 风格描述
+        vocal:
+          type: object
+          nullable: true
+          description: 人声参数
+          properties:
+            gender:
+              type: string
+              enum: [male, female, other]
+            timbre:
+              type: string
+            style:
+              type: string
+            effects:
+              type: object
+              additionalProperties: true
+          additionalProperties: true
+        instrumental:
+          type: object
+          nullable: true
+          description: 器乐配置
+          properties:
+            instruments:
+              type: array
+              items:
+                type: string
+            bpm:
+              type: integer
+              minimum: 40
+              maximum: 240
+            production:
+              type: string
+          additionalProperties: true
+        qualityScore:
+          type: string
+          enum: [high, medium, low]
+          description: 质量评分
+        qualityWarnings:
+          type: array
+          items:
+            type: string
+          description: 质量警告列表
+        outputCount:
+          type: integer
+          description: 关联的输出数量（仅列表接口返回）
+        createdAt:
+          type: string
+          format: date-time
+          description: 创建时间
+        updatedAt:
+          type: string
+          format: date-time
+          description: 更新时间
+
+    PromptDetail:
+      allOf:
+        - $ref: '#/components/schemas/Prompt'
+        - type: object
+          properties:
+            outputs:
+              type: array
+              items:
+                $ref: '#/components/schemas/Output'
+              description: 关联的输出列表
+
+    Output:
+      type: object
+      required: [id, promptId, audioUrl, modelVersion, generationParams, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: 输出唯一标识
+        promptId:
+          type: string
+          format: uuid
+          description: 关联的提示词 ID
+        audioUrl:
+          type: string
+          format: uri
+          maxLength: 500
+          description: 音频文件 URL
+        modelVersion:
+          type: string
+          description: Minimax 模型版本
+          example: 'Music-2.5'
+        generationParams:
+          type: object
+          description: 生成参数
+          properties:
+            seed:
+              type: integer
+            temperature:
+              type: number
+              minimum: 0
+              maximum: 2
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+          description: 创建时间
+
+    CreatePromptRequest:
+      type: object
+      properties:
+        lyrics:
+          type: string
+          nullable: true
+          maxLength: 3500
+        style:
+          type: string
+          nullable: true
+          maxLength: 2000
+        vocal:
+          type: object
+          nullable: true
+          additionalProperties: true
+        instrumental:
+          type: object
+          nullable: true
+          additionalProperties: true
+      anyOf:
+        - required: [lyrics]
+        - required: [style]
+
+    CreateOutputRequest:
+      type: object
+      required: [audioUrl]
+      properties:
+        audioUrl:
+          type: string
+          format: uri
+          maxLength: 500
+        modelVersion:
+          type: string
+          default: 'Music-2.5'
+        generationParams:
+          type: object
+          additionalProperties: true
+
+    Meta:
+      type: object
+      required: [timestamp, version]
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: 响应时间戳
+        version:
+          type: string
+          description: API 版本
+          example: '1.0.0'
+
+    Error:
+      type: object
+      required: [success, error]
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              description: 错误代码
+            message:
+              type: string
+              description: 错误描述
+            details:
+              type: object
+              description: 详细错误信息
+              additionalProperties: true
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+  responses:
+    BadRequest:
+      description: 请求参数错误
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            validationError:
+              summary: 验证失败
+              value:
+                success: false
+                error:
+                  code: 'VALIDATION_ERROR'
+                  message: '请求参数验证失败'
+                  details:
+                    field: 'lyrics'
+                    error: '歌词长度超过 3500 字符'
+                meta:
+                  timestamp: '2026-02-11T10:30:00Z'
+                  version: '1.0.0'
+
+    NotFound:
+      description: 资源不存在
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            promptNotFound:
+              summary: 提示词不存在
+              value:
+                success: false
+                error:
+                  code: 'NOT_FOUND'
+                  message: '提示词不存在'
+                  details:
+                    id: '550e8400-e29b-41d4-a716-446655440000'
+                meta:
+                  timestamp: '2026-02-11T10:30:00Z'
+                  version: '1.0.0'
+
+    InternalError:
+      description: 服务器内部错误
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            databaseError:
+              summary: 数据库错误
+              value:
+                success: false
+                error:
+                  code: 'INTERNAL_ERROR'
+                  message: '服务器内部错误，请稍后重试'
+                meta:
+                  timestamp: '2026-02-11T10:30:00Z'
+                  version: '1.0.0'
+
+tags:
+  - name: Prompts
+    description: 提示词管理接口
+  - name: Outputs
+    description: 输出追踪接口
