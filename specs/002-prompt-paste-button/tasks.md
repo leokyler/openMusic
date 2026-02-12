@@ -102,22 +102,22 @@
 
 ### Setup Tasks
 
-- [ ] T001 [P] Install clipboard.js library and TypeScript types in project root
+- [x] T001 [P] Install clipboard.js library and TypeScript types in project root
       File: `package.json`
       Command: `pnpm add clipboard @types/clipboard`
       Verify: Check clipboard@^2.0.11 in dependencies
 
-- [ ] T002 [P] Update existing TypeScript type definitions for Prompt with copy tracking fields
+- [x] T002 [P] Update existing TypeScript type definitions for Prompt with copy tracking fields
       File: `lib/types/prompt.ts` (or existing types location)
       Add fields: `copy_count: number`, `last_copied_at: string | null`
       Verify: No TypeScript errors in file
 
-- [ ] T003 [P] Create directory structure for feature components and utilities
+- [x] T003 [P] Create directory structure for feature components and utilities
       Directories: `components/prompt/`, `lib/`, `tests/unit/lib/`
       Command: `mkdir -p components/prompt lib tests/unit/lib`
       Verify: All directories exist
 
-- [ ] T004 Create ESLint and Prettier configuration for code quality tools
+- [x] T004 Create ESLint and Prettier configuration for code quality tools
       File: `.eslintrc.js`, `.prettierrc`
       Add rules for React hooks, accessibility (aria-\*)
       Verify: `pnpm lint` runs without errors
@@ -137,45 +137,45 @@
 
 ### Prisma Schema Tasks
 
-- [ ] T005 [P] Add copy_count and last_copied_at fields to Prompt model in Prisma schema
+- [x] T005 [P] Add copy_count and last_copied_at fields to Prompt model in Prisma schema
       File: `prisma/schema.prisma`
       Add fields: `copy_count Int @default(0)`, `last_copied_at DateTime?`
       Verify: Schema syntax valid (`prisma format`)
 
-- [ ] T006 Create index on copy_count for sorting prompts by popularity
+- [x] T006 Create index on copy_count for sorting prompts by popularity
       File: `prisma/schema.prisma`
       Add index: `@@index([copy_count(sort: Desc)])`
       Verify: Index definition valid
 
 ### Database Migration Tasks
 
-- [ ] T007 Generate Prisma migration file for copy tracking fields
+- [x] T007 Generate Prisma migration file for copy tracking fields
       Command: `pnpm prisma migrate dev --name add_copy_tracking`
       Output: `prisma/migrations/xxxxx_add_copy_tracking/migration.sql`
       Verify: Migration file created with ALTER TABLE statements
 
-- [ ] T008 Apply database migration to add copy_count and last_copied_at columns
+- [x] T008 Apply database migration to add copy_count and last_copied_at columns
       Command: `pnpm prisma migrate deploy`
       Verify: Columns exist in PostgreSQL (`\d prompts` in psql)
 
-- [ ] T009 Regenerate Prisma Client with new Prompt fields
+- [x] T009 Regenerate Prisma Client with new Prompt fields
       Command: `pnpm prisma generate`
       Output: `node_modules/.prisma/client` updated
       Verify: `Prisma.prompt` includes `copy_count` and `last_copied_at`
 
 ### API Contract Test Tasks
 
-- [ ] T010 Create contract test for POST /api/prompts/:id/copy endpoint
+- [x] T010 Create contract test for POST /api/prompts/:id/copy endpoint
       File: `tests/contract/prompt-copy.test.ts`
       Test cases: 200 success, 404 not found, 400 invalid ID
       Verify: All contract tests pass
 
-- [ ] T011 [P] Implement copy tracking API route handler
+- [x] T011 [P] Implement copy tracking API route handler
       File: `app/api/prompts/[id]/copy/route.ts`
       Logic: Atomic increment of copy_count, update last_copied_at
       Verify: Returns CopyTrackingResponse with proper structure
 
-- [ ] T012 [P] Add error handling for invalid prompt IDs in copy API
+- [x] T012 [P] Add error handling for invalid prompt IDs in copy API
       File: `app/api/prompts/[id]/copy/route.ts`
       Logic: Check prompt existence before update, return 404 if not found
       Verify: 404 response matches OpenAPI spec
@@ -203,13 +203,13 @@
 
 ### Clipboard Utility Tasks
 
-- [ ] T013 [P] Implement copyToClipboard utility function with clipboard.js integration
+- [x] T013 [P] Implement copyToClipboard utility function with clipboard.js integration
       File: `lib/clipboard.ts`
       Functions: `copyToClipboard(text, options)`, `formatPromptForCopy(prompt)`
       Features: clipboard.js initialization, fallback to execCommand, success/error callbacks
       Verify: Function returns Clipboard instance, handles errors gracefully
 
-- [ ] T014 Implement formatPromptForCopy utility to format prompt with English labels
+- [x] T014 Implement formatPromptForCopy utility to format prompt with English labels
       File: `lib/clipboard.ts`
       Logic: Only include filled fields, use English labels (lyrics, style, vocal, instrumental)
       Output: Formatted string with field labels and content separated by newlines
@@ -217,40 +217,40 @@
 
 ### Form Page Integration Tasks
 
-- [ ] T015 [P] Create CopyPromptButton reusable component with icon and label variants
+- [x] T015 [P] Create CopyPromptButton reusable component with icon and label variants
       File: `components/prompt/CopyPromptButton.tsx`
       Props: `prompt: Partial<Prompt>`, `variant?: 'icon-only' | 'with-label'`
       Features: Copy icon, success state (Check icon), disabled state, keyboard accessible
       Verify: Component renders button, accepts props, has proper ARIA labels
 
-- [ ] T016 Add loading state to CopyPromptButton during copy operation
+- [x] T016 Add loading state to CopyPromptButton during copy operation
       File: `components/prompt/CopyPromptButton.tsx`
       State: `tracking: boolean` to disable button during async copy
       UI: Show loading spinner or disabled state when copying
       Verify: Button disabled during copy operation, re-enables after completion
 
-- [ ] T017 Implement success Toast notification after successful copy operation
+- [x] T017 Implement success Toast notification after successful copy operation
       File: `components/prompt/CopyPromptButton.tsx`
       UI: "已复制到剪贴板" message, auto-dismiss after 2 seconds
       Verify: Toast appears on success, disappears after timeout
 
-- [ ] T018 Add error handling for clipboard permission denial
+- [x] T018 Add error handling for clipboard permission denial
       File: `components/prompt/CopyPromptButton.tsx`
       UI: Error message with manual copy instructions when clipboard access denied
       Verify: Error Toast displayed when permission rejected, includes manual instructions
 
-- [ ] T019 [P] Implement keyboard accessibility attributes on CopyPromptButton
+- [x] T019 [P] Implement keyboard accessibility attributes on CopyPromptButton
       File: `components/prompt/CopyPromptButton.tsx`
       Attributes: `aria-label="复制提示词到剪贴板"`, `type="button"`, visible focus styles
       Verify: Tab navigates to button, Enter/Space triggers copy, focus outline visible
 
-- [ ] T020 Add validation to prevent copy when all prompt fields are empty
+- [x] T020 Add validation to prevent copy when all prompt fields are empty
       File: `components/prompt/CopyPromptButton.tsx`
       Logic: Check if at least one field (lyrics, style, vocal, instrumental) has content
       UI: Show error Toast "请先填写提示词内容" if all fields empty
       Verify: Copy button disabled or shows error when all fields empty
 
-- [ ] T021 Integrate CopyPromptButton into prompt form page bottom action area
+- [x] T021 Integrate CopyPromptButton into prompt form page bottom action area
       File: `app/prompts/new/page.tsx`
       Location: Below form fields, in action section
       Variant: `with-label` to show "复制" text alongside icon
@@ -258,13 +258,13 @@
 
 ### API Integration Tasks
 
-- [ ] T022 [P] Implement async copy tracking API call in CopyPromptButton component
+- [x] T022 [P] Implement async copy tracking API call in CopyPromptButton component
       File: `components/prompt/CopyPromptButton.tsx`
       Function: `trackCopy(promptId)` calls POST /api/prompts/:id/copy
       Timing: Async, non-blocking, logs error to console if fails
       Verify: Network request made after successful copy, doesn't block UI
 
-- [ ] T023 Add debounce mechanism to prevent duplicate copy operations
+- [x] T023 Add debounce mechanism to prevent duplicate copy operations
       File: `components/prompt/CopyPromptButton.tsx`
       Timing: Disable button for 500ms after copy, prevent rapid repeated clicks
       Verify: Multiple rapid clicks result in single copy operation
@@ -284,59 +284,59 @@
 
 ### Detail Page Integration Tasks
 
-- [ ] T024 [P] Add CopyPromptButton to detail page header (top position)
+- [x] T024 [P] Add CopyPromptButton to detail page header (top position)
       File: `app/prompts/[id]/page.tsx`
       Location: Page header, aligned with title or breadcrumbs
       Variant: `icon-only` for compact display
       Verify: Copy button visible at top of detail page
 
-- [ ] T025 Add CopyPromptButton to detail page bottom (secondary position)
+- [x] T025 Add CopyPromptButton to detail page bottom (secondary position)
       File: `app/prompts/[id]/page.tsx`
       Location: Below prompt content, in action section
       Variant: `with-label` for clear call-to-action
       Verify: Copy button visible at bottom of detail page
 
-- [ ] T026 Update existing Prompt type definition to include copy tracking fields from API response
+- [x] T026 Update existing Prompt type definition to include copy tracking fields from API response
       File: `lib/types/prompt.ts` (or existing types location)
       Fields: Add `copy_count?: number`, `last_copied_at?: string | null` to interface
       Verify: TypeScript compiles without errors, fields optional
 
-- [ ] T027 Display copy metrics (copy_count, last_copied_at) on detail page
+- [x] T027 Display copy metrics (copy_count, last_copied_at) on detail page
       File: `app/prompts/[id]/page.tsx`
       UI: Show "已复制 X 次，最后复制于 [时间]" if copy_count > 0
       Verify: Metrics displayed on detail page, formatted in Chinese
 
-- [ ] T028 Update detail page API call to include copy tracking fields
+- [x] T028 Update detail page API call to include copy tracking fields
       File: `app/prompts/[id]/page.tsx`
       Query: Add `copy_count`, `last_copied_at` to SELECT fields
       Verify: API response includes tracking data
 
-- [ ] T029 Add loading state handling while fetching prompt with copy metrics
+- [x] T029 Add loading state handling while fetching prompt with copy metrics
       File: `app/prompts/[id]/page.tsx`
       State: Show skeleton or spinner while fetching prompt data
       Verify: Loading indicator visible during data fetch
 
-- [ ] T030 Implement error handling for detail page API failures
+- [x] T030 Implement error handling for detail page API failures
       File: `app/prompts/[id]/page.tsx`
       UI: Error message when prompt fetch fails, retry option
       Verify: Error state displayed when API fails
 
-- [ ] T031 Add responsive layout for detail page copy buttons (mobile)
+- [x] T031 Add responsive layout for detail page copy buttons (mobile)
       File: `app/prompts/[id]/page.tsx`
       Layout: Top button on desktop, both top and bottom accessible on mobile
       Verify: Buttons accessible on mobile devices, touch-friendly
 
-- [ ] T032 Add focus management for copy buttons after page load
+- [x] T032 Add focus management for copy buttons after page load
       File: `app/prompts/[id]/page.tsx`
       Logic: Set focus to page title or main content on mount
       Verify: Focus starts at appropriate element for keyboard navigation
 
-- [ ] T033 Implement aria-live region for success/error Toast announcements
+- [x] T033 Implement aria-live region for success/error Toast announcements
       File: `app/prompts/[id]/page.tsx`
       Attribute: `aria-live="polite"` on Toast container
       Verify: Screen readers announce Toast messages
 
-- [ ] T034 Add copy button state management for detail page (copied vs default)
+- [x] T034 Add copy button state management for detail page (copied vs default)
       File: `app/prompts/[id]/page.tsx`
       State: Track `copied: boolean` per button (separate state for top and bottom)
       Verify: Each button maintains independent copied state
@@ -356,52 +356,52 @@
 
 ### Testing Tasks
 
-- [ ] T035 Write E2E tests for form page copy button using Playwright
+- [x] T035 Write E2E tests for form page copy button using Playwright
       File: `tests/e2e/prompt-form-copy.spec.ts`
       Scenarios: Form fill, copy button click, clipboard verification, Toast display
       Browsers: Chrome, Firefox, Safari (mobile + desktop)
       Verify: All E2E tests pass, clipboard content verified
 
-- [ ] T036 Write E2E tests for detail page copy button
+- [x] T036 Write E2E tests for detail page copy button
       File: `tests/e2e/prompt-detail-copy.spec.ts`
       Scenarios: Detail page load, copy from top and bottom buttons, metrics display
       Verify: All E2E tests pass, copy tracking API called
 
-- [ ] T037 Write unit tests for clipboard utility functions
+- [x] T037 Write unit tests for clipboard utility functions
       File: `tests/unit/lib/clipboard.test.ts`
       Tests: `formatPromptForCopy`, `copyToClipboard`, error handling, empty field filtering
       Verify: All unit tests pass, edge cases covered
 
 ### Documentation Tasks
 
-- [ ] T038 Update README.md with copy button feature documentation
+- [x] T038 Update README.md with copy button feature documentation
       File: `README.md`
       Content: Feature description, usage examples, browser compatibility notes
       Verify: README includes copy button section
 
-- [ ] T039 Update quickstart.md with any implementation notes or lessons learned
+- [x] T039 Update quickstart.md with any implementation notes or lessons learned
       File: `specs/002-prompt-paste-button/quickstart.md`
       Add notes: Implementation gotchas, troubleshooting tips, optimization opportunities
       Verify: Quickstart reflects actual implementation experience
 
-- [ ] T040 Create example usage documentation for CopyPromptButton component
+- [x] T040 Create example usage documentation for CopyPromptButton component
       File: `components/prompt/CopyPromptButton.md` or inline comments
       Content: Props interface, usage examples, accessibility notes
       Verify: Component has usage documentation
 
 ### Code Quality Tasks
 
-- [ ] T041 Run ESLint and fix all reported issues
+- [x] T041 Run ESLint and fix all reported issues
       Command: `pnpm lint`
       Fix: Address accessibility, React hooks, TypeScript errors
       Verify: `pnpm lint` exits with no errors
 
-- [ ] T042 Run TypeScript type checker and fix all type errors
+- [x] T042 Run TypeScript type checker and fix all type errors
       Command: `pnpm check-types`
       Fix: Resolve type mismatches, missing types, implicit any
       Verify: `pnpm check-types` completes successfully
 
-- [ ] T043 Run Prettier formatter on all files to ensure consistent code style
+- [x] T043 Run Prettier formatter on all files to ensure consistent code style
       Command: `pnpm format`
       Scope: All modified files in this feature
       Verify: Code formatted consistently, no Prettier warnings
