@@ -6,7 +6,6 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { PromptDetail } from '@/components/prompt/prompt-detail';
 import type { Prompt } from '@/lib/types/prompt';
 
@@ -15,7 +14,6 @@ interface PageProps {
 }
 
 export default function PromptDetailPage({ params }: PageProps) {
-  const router = useRouter();
   const [prompt, setPrompt] = useState<Prompt | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -79,25 +77,7 @@ export default function PromptDetailPage({ params }: PageProps) {
       )}
 
       {/* 提示词详情 */}
-      {!isLoading && !error && prompt && (
-        <>
-          <PromptDetail prompt={prompt} />
-
-          {/* 操作按钮 */}
-          <div className="mt-8 flex justify-end gap-3">
-            {/* 关联输出按钮（Phase 5添加） */}
-            <button
-              onClick={() => {
-                // TODO: 实现关联输出功能
-                alert('关联输出功能将在 Phase 5 实现');
-              }}
-              className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
-            >
-              关联音频输出
-            </button>
-          </div>
-        </>
-      )}
+      {!isLoading && !error && prompt && <PromptDetail prompt={prompt} />}
     </div>
   );
 }
