@@ -38,7 +38,7 @@ description: 'Implementation tasks for Structured Prompt Builder MVP'
 ### Database & Schema Setup
 
 - [x] T006 创建 Prisma schema 文件 prisma/schema.prisma，定义 Prompt 和 Output 模型
-- [ ] T007 运行初始数据库迁移 `prisma migrate dev --name init`
+- [x] T007 设置 prisma.config.ts 文件后，运行初始数据库迁移 `prisma migrate dev --name init`
 - [x] T008 生成 Prisma Client 类型 `prisma generate`
 - [x] T009 [P] 创建 Prisma 客户端单例 lib/prisma.ts
 - [x] T010 [P] 创建种子数据脚本 prisma/seed.ts（可选，用于开发）
