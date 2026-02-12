@@ -17,6 +17,11 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       exclude: ['node_modules/', 'tests/', '**/*.config.*', '**/.*'],
     },
+    // 环境变量加载顺序：.env.test.local -> .env.test -> .env.local -> .env
+    env: {
+      // 可以在这里设置测试特定的环境变量
+      NODE_ENV: 'test',
+    },
   },
   resolve: {
     alias: {

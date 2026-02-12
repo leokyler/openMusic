@@ -12,6 +12,8 @@
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
+    "test:unit": "vitest tests/unit --run",
+    "test:perf": "vitest tests/unit/*-performance.test.ts --run",
     "format": "prettier --write ."
   },
   "dependencies": {
