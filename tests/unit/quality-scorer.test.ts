@@ -13,8 +13,11 @@ describe('Quality Scorer', () => {
 在夜空下徘徊
 
 [Chorus]
-星光闪耀，照亮前方`,
-        'Pop, Acoustic, Emotional, 80-100 BPM',
+星光闪耀，照亮前方
+
+[Bridge]
+追逐梦想的路`,
+        'Pop, Acoustic, Emotional, 80-100 BPM, uplifting mood',
         { gender: 'female', timbre: '清澈、温暖', style: '抒情' },
         { instruments: ['acoustic guitar', 'piano'], bpm: 90 }
       );
@@ -24,10 +27,32 @@ describe('Quality Scorer', () => {
     });
 
     it('应该给中等质量提示词评分 medium', () => {
-      const result = calculateQualityScore('简单的歌词，没有章节标签', 'Pop style', null, null);
+      const result = calculateQualityScore(
+        `[Verse 1]
+简单的歌词内容
+
+[Chorus]
+副歌部分`,
+        'Pop style with moderate description',
+        null,
+        null
+      );
 
       expect(result.score).toBe('medium');
-      expect(result.warnings.length).toBeGreaterThan(0);
+      expect(result.warnings).toContain('建议添加人声参数');
+      expect(result.warnings).toContain('建议添加器乐配置');
+    });
+
+    it('应该给简单但可用的提示词评分 medium', () => {
+      const result = calculateQualityScore(
+        '简单的歌词内容，没有章节标签',
+        'Pop style with moderate description text here',
+        { gender: 'male', timbre: '温暖', style: '流行' },
+        null
+      );
+
+      expect(result.score).toBe('medium');
+      expect(result.warnings).toContain('缺少章节标签，建议使用 [Verse]、[Chorus] 等');
     });
 
     it('应该给低质量提示词评分 low', () => {
@@ -40,10 +65,11 @@ describe('Quality Scorer', () => {
       expect(result.warnings).toContain('建议添加器乐配置');
     });
 
-    it('应该检测章节标签', () => {
+    it('应该检测章节标签并加分', () => {
       const result = calculateQualityScore(
         `[Verse 1]
 First verse
+
 [Chorus]
 Chorus text`,
         null,
@@ -84,11 +110,17 @@ Chorus text`,
     it('应该拒绝完全空的提示词', () => {
       const result = validatePromptData(null, null);
       expect(result.valid).toBe(false);
-      expect(result.error).toBe('必须提供歌词或风格');
+      expect(result.error).toBe('歌词和风格不能同时为空');
     });
 
     it('应该拒绝空字符串', () => {
       const result = validatePromptData('', '');
+      expect(result.valid).toBe(false);
+      expect(result.error).toBe('歌词和风格不能同时为空');
+    });
+
+    it('应该拒绝只有空格的字符串', () => {
+      const result = validatePromptData('   ', '   ');
       expect(result.valid).toBe(false);
       expect(result.error).toBe('歌词和风格不能同时为空');
     });

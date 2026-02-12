@@ -66,45 +66,48 @@ export function calculateQualityScore(
     };
   }
 
-  // lyrics 评分 (40 分)
+  // lyrics 评分 (30 分)
   if (lyrics) {
     const tags = countSectionTags(lyrics);
-    if (tags >= 3) score += 40;
-    else if (tags >= 1) score += 20;
-    else warnings.push('缺少章节标签，建议使用 [Verse]、[Chorus] 等');
+    if (tags >= 3) score += 30;
+    else if (tags >= 1) score += 25;
+    else score += 15;
 
     if (lyrics.length > 3500) {
-      score -= 10;
+      score = Math.max(0, score - 5);
       warnings.push('歌词超过 3500 字符，可能影响生成');
     }
-  } else {
-    warnings.push('建议添加歌词以提高生成质量');
   }
 
   // style 评分 (30 分)
   if (style) {
     if (style.length > 50) score += 30;
-    else if (style.length > 10) score += 15;
+    else if (style.length > 10) score += 20;
+    else score += 10;
 
     if (style.length > 2000) {
-      score -= 10;
+      score = Math.max(0, score - 5);
       warnings.push('风格描述超过 2000 字符');
     }
-  } else {
-    warnings.push('建议添加风格描述');
   }
 
-  // vocal 评分 (15 分)
-  if (vocal) score += 15;
-  else warnings.push('建议添加人声参数');
+  // vocal 评分 (20 分)
+  if (vocal) score += 20;
 
-  // instrumental 评分 (15 分)
-  if (instrumental) score += 15;
-  else warnings.push('建议添加器乐配置');
+  // instrumental 评分 (20 分)
+  if (instrumental) score += 20;
+
+  // 生成警告信息（仅针对缺失的可选元素）
+  if (!lyrics) warnings.push('建议添加歌词以提高生成质量');
+  else if (countSectionTags(lyrics) === 0)
+    warnings.push('缺少章节标签，建议使用 [Verse]、[Chorus] 等');
+  if (!style) warnings.push('建议添加风格描述');
+  if (!vocal) warnings.push('建议添加人声参数');
+  if (!instrumental) warnings.push('建议添加器乐配置');
 
   // 计算最终评分
-  if (score >= 80) return { score: 'high', warnings };
-  if (score >= 50) return { score: 'medium', warnings };
+  if (score >= 70) return { score: 'high', warnings };
+  if (score >= 25) return { score: 'medium', warnings };
   return { score: 'low', warnings };
 }
 
@@ -116,16 +119,10 @@ export function validatePromptData(
   lyrics: string | null,
   style: string | null
 ): { valid: boolean; error?: string } {
-  // 唯一硬性约束：至少提供 lyrics 或 style
-  if (!lyrics && !style) {
-    return {
-      valid: false,
-      error: '必须提供歌词或风格',
-    };
-  }
+  const hasLyrics = lyrics && lyrics.trim().length > 0;
+  const hasStyle = style && style.trim().length > 0;
 
-  // 可选：检查是否真的是空字符串
-  if (lyrics === '' && style === '') {
+  if (!hasLyrics && !hasStyle) {
     return {
       valid: false,
       error: '歌词和风格不能同时为空',

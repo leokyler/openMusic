@@ -34,22 +34,25 @@ export function PromptForm({
   const [lyrics, setLyrics] = useState(initialValues.lyrics || '');
   const [style, setStyle] = useState(initialValues.style || '');
   const [vocalGender, setVocalGender] = useState<'male' | 'female' | 'other'>(
-    (initialValues.vocal as any)?.gender || 'other'
+    initialValues.vocal?.gender || 'other'
   );
-  const [vocalTimbre, setVocalTimbre] = useState((initialValues.vocal as any)?.timbre || '');
-  const [vocalStyle, setVocalStyle] = useState((initialValues.vocal as any)?.style || '');
+  const [vocalTimbre, setVocalTimbre] = useState(initialValues.vocal?.timbre || '');
+  const [vocalStyle, setVocalStyle] = useState(initialValues.vocal?.style || '');
   const [instruments, setInstruments] = useState(
-    (initialValues.instrumental as any)?.instruments?.join(', ') || ''
+    initialValues.instrumental?.instruments?.join(', ') || ''
   );
-  const [bpm, setBpm] = useState((initialValues.instrumental as any)?.bpm || 120);
+  const [bpm, setBpm] = useState(initialValues.instrumental?.bpm || 120);
 
   // 字符计数
   const lyricsCount = lyrics.length;
   const styleCount = style.length;
 
-  // 验证警告（实时预览）
+  // 硬性验证：必须提供歌词或风格之一
+  const hasRequiredContent = lyrics.trim().length > 0 || style.trim().length > 0;
+
+  // 验证警告（实时预览，仅用于提示）
   const warnings = [
-    lyricsCount === 0 && styleCount === 0 ? '必须提供歌词或风格' : null,
+    !hasRequiredContent ? '歌词和风格不能同时为空' : null,
     lyricsCount > 0 && !lyrics.includes('[Verse]') && !lyrics.includes('[Chorus]')
       ? '缺少章节标签，建议使用 [Verse]、[Chorus] 等'
       : null,
@@ -155,7 +158,7 @@ export function PromptForm({
             <select
               id="vocal-gender"
               value={vocalGender}
-              onChange={(e) => setVocalGender(e.target.value as any)}
+              onChange={(e) => setVocalGender(e.target.value as 'male' | 'female' | 'other')}
               className="w-full px-3 py-2 border rounded-md text-sm"
             >
               <option value="other">其他</option>
@@ -225,7 +228,7 @@ export function PromptForm({
 
       {/* 提交按钮 */}
       <div className="flex justify-end gap-3">
-        <Button type="submit" disabled={isSubmitting || warnings.length > 0}>
+        <Button type="submit" disabled={isSubmitting || !hasRequiredContent}>
           {isSubmitting ? '提交中...' : submitLabel}
         </Button>
       </div>
