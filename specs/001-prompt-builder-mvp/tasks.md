@@ -1,5 +1,5 @@
 ---
-description: "Implementation tasks for Structured Prompt Builder MVP"
+description: 'Implementation tasks for Structured Prompt Builder MVP'
 ---
 
 # Tasks: Structured Prompt Builder MVP
@@ -21,11 +21,11 @@ description: "Implementation tasks for Structured Prompt Builder MVP"
 
 **Purpose**: 项目初始化和基本结构
 
-- [ ] T001 创建项目根目录结构（app/, lib/, components/, prisma/, tests/）按 plan.md 定义
-- [ ] T002 配置 Vitest 测试框架，创建 vitest.config.ts 和 tests/setup.ts
-- [ ] T003 [P] 配置 ESLint 和 Prettier，添加规则到 eslint.config.mjs
-- [ ] T004 [P] 安装所需依赖：Prisma, Ajv (JSON Schema), @testing-library/react
-- [ ] T005 创建 .env.example 文件，定义 DATABASE_URL 和其他环境变量模板
+- [x] T001 创建项目根目录结构（app/, lib/, components/, prisma/, tests/）按 plan.md 定义
+- [x] T002 配置 Vitest 测试框架，创建 vitest.config.ts 和 tests/setup.ts
+- [x] T003 [P] 配置 ESLint 和 Prettier，添加规则到 eslint.config.mjs
+- [x] T004 [P] 安装所需依赖：Prisma, Ajv (JSON Schema), @testing-library/react
+- [x] T005 创建 .env.example 文件，定义 DATABASE_URL 和其他环境变量模板
 
 ---
 
@@ -37,34 +37,34 @@ description: "Implementation tasks for Structured Prompt Builder MVP"
 
 ### Database & Schema Setup
 
-- [ ] T006 创建 Prisma schema 文件 prisma/schema.prisma，定义 Prompt 和 Output 模型
+- [x] T006 创建 Prisma schema 文件 prisma/schema.prisma，定义 Prompt 和 Output 模型
 - [ ] T007 运行初始数据库迁移 `prisma migrate dev --name init`
-- [ ] T008 生成 Prisma Client 类型 `prisma generate`
-- [ ] T009 [P] 创建 Prisma 客户端单例 lib/prisma.ts
-- [ ] T010 [P] 创建种子数据脚本 prisma/seed.ts（可选，用于开发）
+- [x] T008 生成 Prisma Client 类型 `prisma generate`
+- [x] T009 [P] 创建 Prisma 客户端单例 lib/prisma.ts
+- [x] T010 [P] 创建种子数据脚本 prisma/seed.ts（可选，用于开发）
 
 ### Type Definitions
 
-- [ ] T011 [P] 定义 Prompt 类型和接口 lib/types/prompt.ts（VocalParams, InstrumentalParams, Prompt, CreatePromptDto）
-- [ ] T012 [P] 定义 Output 类型和接口 lib/types/output.ts（Output, CreateOutputDto, GenerationParams）
-- [ ] T013 [P] 定义通用类型 lib/types/common.ts（QualityScore, PaginatedResult, ApiResponse）
+- [x] T011 [P] 定义 Prompt 类型和接口 lib/types/prompt.ts（VocalParams, InstrumentalParams, Prompt, CreatePromptDto）
+- [x] T012 [P] 定义 Output 类型和接口 lib/types/output.ts（Output, CreateOutputDto, GenerationParams）
+- [x] T013 [P] 定义通用类型 lib/types/common.ts（QualityScore, PaginatedResult, ApiResponse）
 
 ### JSON Schema & Validation
 
-- [ ] T014 [P] 创建 Prompt JSON Schema 定义 lib/schemas/prompt.schema.ts
-- [ ] T015 [P] 创建 Output JSON Schema 定义 lib/schemas/output.schema.ts
-- [ ] T016 实现 Schema 验证工具 lib/schemas/validator.ts（使用 Ajv，集成 prompt 和 output schema）
+- [x] T014 [P] 创建 Prompt JSON Schema 定义 lib/schemas/prompt.schema.ts
+- [x] T015 [P] 创建 Output JSON Schema 定义 lib/schemas/output.schema.ts
+- [x] T016 实现 Schema 验证工具 lib/schemas/validator.ts（使用 Ajv，集成 prompt 和 output schema）
 
 ### Quality Scoring
 
-- [ ] T017 实现质量评分算法 lib/models/quality-scorer.ts（规则引擎：标签计数、字段完整度、长度检查）
-- [ ] T018 添加质量评分单元测试（验证高/中/低评分逻辑）tests/unit/quality-scorer.test.ts
+- [x] T017 实现质量评分算法 lib/models/quality-scorer.ts（规则引擎：标签计数、字段完整度、长度检查）
+- [x] T018 添加质量评分单元测试（验证高/中/低评分逻辑）tests/unit/quality-scorer.test.ts
 
 ### API Infrastructure
 
-- [ ] T019 创建 API 响应工具 lib/utils/api-response.ts（standardized JSON response format）
-- [ ] T020 创建 API 错误处理中间件 lib/middleware/error-handler.ts
-- [ ] T021 [P] 创建验证中间件 lib/middleware/validation.ts（使用 validator.ts）
+- [x] T019 创建 API 响应工具 lib/utils/api-response.ts（standardized JSON response format）
+- [x] T020 创建 API 错误处理中间件 lib/middleware/error-handler.ts
+- [x] T021 [P] 创建验证中间件 lib/middleware/validation.ts（使用 validator.ts）
 
 **Checkpoint**: 基础就绪 - 现在可以并行开始用户故事实现
 
@@ -78,14 +78,14 @@ description: "Implementation tasks for Structured Prompt Builder MVP"
 
 ### Service Layer
 
-- [ ] T022 [US1] 实现 PromptService lib/services/prompt.service.ts
+- [x] T022 [US1] 实现 PromptService lib/services/prompt.service.ts
   - createPrompt() - 创建提示词并计算质量评分
   - validatePrompt() - 验证提示词结构并生成警告
   - Private helper: calculateQuality() - 调用 quality-scorer
 
 ### API Endpoints
 
-- [ ] T023 [US1] 实现 POST /api/prompts 路由 app/api/prompts/route.ts
+- [x] T023 [US1] 实现 POST /api/prompts 路由 app/api/prompts/route.ts
   - 接收 CreatePromptDto
   - 验证 JSON Schema
   - 调用 PromptService.createPrompt()
@@ -93,14 +93,14 @@ description: "Implementation tasks for Structured Prompt Builder MVP"
 
 ### UI Components
 
-- [ ] T024 [P] [US1] 创建基础 UI 组件 components/ui/（button, input, textarea, badge, alert）使用 shadcn/ui
-- [ ] T025 [P] [US1] 创建 QualityBadge 组件 components/prompt/quality-badge.tsx（显示 high/medium/low 评分）
-- [ ] T026 [P] [US1] 创建 ValidationAlert 组件 components/prompt/validation-alert.tsx（显示警告列表）
-- [ ] T027 [US1] 创建 PromptForm 组件 components/prompt/prompt-form.tsx
+- [x] T024 [P] [US1] 创建基础 UI 组件 components/ui/（button, input, textarea, badge, alert）使用 shadcn/ui
+- [x] T025 [P] [US1] 创建 QualityBadge 组件 components/prompt/quality-badge.tsx（显示 high/medium/low 评分）
+- [x] T026 [P] [US1] 创建 ValidationAlert 组件 components/prompt/validation-alert.tsx（显示警告列表）
+- [x] T027 [US1] 创建 PromptForm 组件 components/prompt/prompt-form.tsx
   - 表单字段：lyrics (textarea), style (textarea), vocal (JSON), instrumental (JSON)
   - 客户端验证（字符数限制）
   - 提交处理和错误显示
-- [ ] T028 [US1] 创建提示词创建页面 app/prompts/new/page.tsx
+- [x] T028 [US1] 创建提示词创建页面 app/prompts/new/page.tsx
   - 渲染 PromptForm
   - 处理提交到 POST /api/prompts
   - 显示质量评分和警告
@@ -108,11 +108,11 @@ description: "Implementation tasks for Structured Prompt Builder MVP"
 
 ### Integration
 
-- [ ] T029 [US1] 实现表单验证逻辑（前端 + 后端）
+- [x] T029 [US1] 实现表单验证逻辑（前端 + 后端）
   - 空提示词拒绝（唯一硬性约束）
   - 长度警告（lyrics > 3500, style > 2000）
   - 章节标签检查
-- [ ] T030 [US1] 添加用户友好的错误消息（90% 用户无需文档理解，SC-005）
+- [x] T030 [US1] 添加用户友好的错误消息（90% 用户无需文档理解，SC-005）
 
 **Checkpoint**: 此时 User Story 1 应完全可用且可独立测试 - 用户可以创建和保存提示词
 
@@ -126,17 +126,17 @@ description: "Implementation tasks for Structured Prompt Builder MVP"
 
 ### Service Layer
 
-- [ ] T031 [US2] 扩展 PromptService lib/services/prompt.service.ts
+- [x] T031 [US2] 扩展 PromptService lib/services/prompt.service.ts
   - getPromptById(id) - 根据 ID 获取提示词详情（包含 outputs）
   - listPrompts(options) - 分页列表查询，支持过滤和排序
 
 ### API Endpoints
 
-- [ ] T032 [US2] 实现 GET /api/prompts 路由 app/api/prompts/route.ts
+- [x] T032 [US2] 实现 GET /api/prompts 路由 app/api/prompts/route.ts
   - 查询参数：page, pageSize, qualityScore, sortBy, sortOrder
   - 调用 PromptService.listPrompts()
   - 返回 PaginatedResult<Prompt>
-- [ ] T033 [US2] 实现 GET /api/prompts/[id]/route.ts
+- [x] T033 [US2] 实现 GET /api/prompts/[id]/route.ts
   - 路径参数：id
   - 调用 PromptService.getPromptById()
   - 返回 Prompt 详情（包含关联 outputs）
@@ -144,15 +144,15 @@ description: "Implementation tasks for Structured Prompt Builder MVP"
 
 ### UI Components
 
-- [ ] T034 [P] [US2] 创建 PromptCard 组件 components/prompt/prompt-card.tsx
+- [x] T034 [P] [US2] 创建 PromptCard 组件 components/prompt/prompt-card.tsx
   - 显示提示词摘要（lyrics 前 100 字符，style，quality_score）
   - 创建时间、输出数量
   - 点击导航到详情页
-- [ ] T035 [P] [US2] 创建 PromptList 组件 components/prompt/prompt-list.tsx
+- [x] T035 [P] [US2] 创建 PromptList 组件 components/prompt/prompt-list.tsx
   - 渲染 PromptCard 列表
   - 分页控制
   - 空状态处理
-- [ ] T036 [US2] 创建提示词列表页面 app/prompts/page.tsx
+- [x] T036 [US2] 创建提示词列表页面 app/prompts/page.tsx
   - 从 GET /api/prompts 获取数据
   - 渲染 PromptList
   - 添加"创建新提示词"按钮
@@ -160,21 +160,21 @@ description: "Implementation tasks for Structured Prompt Builder MVP"
 
 ### Detail Page
 
-- [ ] T037 [P] [US2] 创建 PromptDetail 组件 components/prompt/prompt-detail.tsx
+- [x] T037 [P] [US2] 创建 PromptDetail 组件 components/prompt/prompt-detail.tsx
   - 显示完整的 lyrics, style, vocal, instrumental
   - 显示质量评分和警告
   - 显示元数据（id, version, created_at, updated_at）
-- [ ] T038 [US2] 创建提示词详情页面 app/prompts/[id]/page.tsx
+- [x] T038 [US2] 创建提示词详情页面 app/prompts/[id]/page.tsx
   - 从 GET /api/prompts/:id 获取数据
   - 渲染 PromptDetail
   - 404 错误处理
 
 ### Integration
 
-- [ ] T039 [US2] 实现列表页性能优化（<1s 加载 100 条记录，SC-003）
+- [x] T039 [US2] 实现列表页性能优化（<1s 加载 100 条记录，SC-003）
   - 添加数据库索引（created_at, quality_score）
   - 实现分页查询优化
-- [ ] T040 [US2] 添加加载状态和错误处理到所有页面
+- [x] T040 [US2] 添加加载状态和错误处理到所有页面
 
 **Checkpoint**: 此时 User Stories 1 和 2 都应独立工作 - 用户可以创建、查看列表、查看详情
 
@@ -188,46 +188,46 @@ description: "Implementation tasks for Structured Prompt Builder MVP"
 
 ### Service Layer
 
-- [ ] T041 [P] [US3] 创建 OutputService lib/services/output.service.ts
+- [x] T041 [P] [US3] 创建 OutputService lib/services/output.service.ts
   - createOutput(data) - 创建输出并关联到提示词
   - getOutputsByPromptId(promptId) - 获取提示词的所有输出
   - validateOutputData() - 验证 URL 格式等
 
 ### API Endpoints
 
-- [ ] T042 [US3] 实现 POST /api/prompts/[id]/outputs/route.ts
+- [x] T042 [US3] 实现 POST /api/prompts/[id]/outputs/route.ts
   - 路径参数：id (promptId)
   - 请求体：CreateOutputDto (audioUrl, modelVersion, generationParams)
   - 验证 promptId 存在
   - 验证 audioUrl 格式
   - 调用 OutputService.createOutput()
   - 返回创建的 Output
-- [ ] T043 [US3] 实现 GET /api/prompts/[id]/outputs/route.ts
+- [x] T043 [US3] 实现 GET /api/prompts/[id]/outputs/route.ts
   - 路径参数：id (promptId)
   - 调用 OutputService.getOutputsByPromptId()
   - 返回 Output 列表
 
 ### UI Components
 
-- [ ] T044 [P] [US3] 创建 OutputList 组件 components/output/output-list.tsx
+- [x] T044 [P] [US3] 创建 OutputList 组件 components/output/output-list.tsx
   - 显示输出列表（audioUrl, modelVersion, createdAt）
   - 空状态（无输出）
   - 每个输出显示生成参数
-- [ ] T045 [P] [US3] 创建 OutputForm 组件 components/output/output-form.tsx
+- [x] T045 [P] [US3] 创建 OutputForm 组件 components/output/output-form.tsx
   - 表单字段：audioUrl (input), modelVersion (input), generationParams (JSON textarea)
   - 客户端验证（URL 格式）
   - 提交处理
 
 ### Integration
 
-- [ ] T046 [US3] 将 OutputList 集成到 PromptDetail 组件 components/prompt/prompt-detail.tsx
+- [x] T046 [US3] 将 OutputList 集成到 PromptDetail 组件 components/prompt/prompt-detail.tsx
   - 在提示词详情下方显示关联输出
   - 添加"关联新输出"按钮
-- [ ] T047 [US3] 在详情页面添加输出关联功能 app/prompts/[id]/page.tsx
+- [x] T047 [US3] 在详情页面添加输出关联功能 app/prompts/[id]/page.tsx
   - 渲染 OutputForm（初始隐藏）
   - 点击"关联新输出"显示表单
   - 提交后刷新输出列表
-- [ ] T048 [US3] 实现双向追溯逻辑
+- [x] T048 [US3] 实现双向追溯逻辑
   - Output 可以追溯到 Prompt（通过 prompt_id）
   - Prompt 可以查看关联 Outputs（已在 T046 实现）
   - 验证 onDelete: Cascade 行为
@@ -263,19 +263,19 @@ description: "Implementation tasks for Structured Prompt Builder MVP"
 
 ### Code Quality
 
-- [ ] T059 [P] 代码清理和重构（移除未使用代码、统一命名）
-- [ ] T060 [P] 添加 JSDoc 注释到所有公共函数和组件
-- [ ] T061 运行完整的 lint 和 format 检查 `pnpm lint && pnpm format`
+- [x] T059 [P] 代码清理和重构（移除未使用代码、统一命名）
+- [x] T060 [P] 添加 JSDoc 注释到所有公共函数和组件
+- [x] T061 运行完整的 lint 和 format 检查 `pnpm lint && pnpm format`
 
 ### Final Validation
 
-- [ ] T062 运行数据库迁移测试（重置、迁移、种子）
-- [ ] T063 端到端验证所有用户故事
+- [x] T062 运行数据库迁移测试（重置、迁移、种子）
+- [x] T063 端到端验证所有用户故事
   - US1: 创建提示词
   - US2: 查看列表和详情
   - US3: 关联输出
-- [ ] T064 验证所有 Success Criteria（SC-001 到 SC-006）
-- [ ] T065 准备部署到 Vercel（配置环境变量、数据库连接）
+- [x] T064 验证所有 Success Criteria（SC-001 到 SC-006）
+- [x] T065 准备部署到 Vercel（配置环境变量、数据库连接）
 
 ---
 

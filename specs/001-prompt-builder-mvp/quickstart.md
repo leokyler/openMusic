@@ -166,16 +166,16 @@ npx prisma generate
 创建 `prisma/seed.ts`：
 
 ```typescript
-import { PrismaClient, QualityScore } from "@prisma/client";
+import { PrismaClient, QualityScore } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("开始填充种子数据...");
+  console.log('开始填充种子数据...');
 
   const prompt1 = await prisma.prompt.create({
     data: {
-      version: "1.0.0",
+      version: '1.0.0',
       lyrics: `[Verse 1]
 在夜空下徘徊
 寻找失去的光彩
@@ -183,28 +183,28 @@ async function main() {
 [Chorus]
 星光闪耀，照亮前方
 勇敢前行，不再迷茫`,
-      style: "Pop, Acoustic, Emotional, 80-100 BPM",
+      style: 'Pop, Acoustic, Emotional, 80-100 BPM',
       vocal: {
-        gender: "female",
-        timbre: "清澈、温暖",
-        style: "抒情",
+        gender: 'female',
+        timbre: '清澈、温暖',
+        style: '抒情',
       },
       instrumental: {
-        instruments: ["acoustic guitar", "piano", "light percussion"],
+        instruments: ['acoustic guitar', 'piano', 'light percussion'],
         bpm: 90,
       },
-      qualityScore: "high",
+      qualityScore: 'high',
       qualityWarnings: [],
     },
   });
 
-  console.log("创建提示词:", prompt1.id);
+  console.log('创建提示词:', prompt1.id);
 
   const output1 = await prisma.output.create({
     data: {
       promptId: prompt1.id,
-      audioUrl: "https://example.com/audio/sample1.mp3",
-      modelVersion: "Music-2.5",
+      audioUrl: 'https://example.com/audio/sample1.mp3',
+      modelVersion: 'Music-2.5',
       generationParams: {
         seed: 12345,
         temperature: 0.8,
@@ -212,13 +212,13 @@ async function main() {
     },
   });
 
-  console.log("创建输出:", output1.id);
-  console.log("种子数据填充完成！");
+  console.log('创建输出:', output1.id);
+  console.log('种子数据填充完成！');
 }
 
 main()
   .catch((e) => {
-    console.error("填充失败:", e);
+    console.error('填充失败:', e);
     process.exit(1);
   })
   .finally(async () => {
@@ -264,12 +264,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/',
-        'tests/',
-        '**/*.config.*',
-        '**/.*',
-      ],
+      exclude: ['node_modules/', 'tests/', '**/*.config.*', '**/.*'],
     },
   },
   resolve: {

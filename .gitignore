@@ -41,3 +41,16 @@ yarn-error.log*
 next-env.d.ts
 
 .turbo
+
+# prisma
+prisma/*.db
+prisma/*.db-journal
+
+# ide
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# os
+Thumbs.db

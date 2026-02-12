@@ -122,7 +122,7 @@ enum QualityScore {
  */
 export interface VocalParams {
   /** 性别：男声、女声或其他 */
-  gender?: "male" | "female" | "other";
+  gender?: 'male' | 'female' | 'other';
 
   /** 音色描述（如：温暖、清澈、沙哑） */
   timbre?: string;
@@ -180,7 +180,7 @@ export interface GenerationParams {
 /**
  * 质量评分枚举
  */
-export type QualityScore = "high" | "medium" | "low";
+export type QualityScore = 'high' | 'medium' | 'low';
 
 /**
  * 提示词实体
@@ -280,10 +280,10 @@ export interface PromptListOptions {
   qualityScore?: QualityScore;
 
   /** 排序字段 */
-  sortBy?: "createdAt" | "updatedAt";
+  sortBy?: 'createdAt' | 'updatedAt';
 
   /** 排序方向 */
-  sortOrder?: "asc" | "desc";
+  sortOrder?: 'asc' | 'desc';
 }
 
 /**
@@ -317,32 +317,32 @@ export interface PaginatedResult<T> {
 // lib/schemas/prompt.schema.ts
 
 export const promptSchema = {
-  type: "object",
+  type: 'object',
   properties: {
     lyrics: {
-      type: ["string", "null"],
+      type: ['string', 'null'],
       maxLength: 3500,
-      description: "歌词内容，支持章节标签如 [Verse]、[Chorus]",
+      description: '歌词内容，支持章节标签如 [Verse]、[Chorus]',
     },
     style: {
-      type: ["string", "null"],
+      type: ['string', 'null'],
       maxLength: 2000,
-      description: "风格描述，如：pop, rock, electronic",
+      description: '风格描述，如：pop, rock, electronic',
     },
     vocal: {
-      type: ["object", "null"],
+      type: ['object', 'null'],
       properties: {
         gender: {
-          type: "string",
-          enum: ["male", "female", "other"],
+          type: 'string',
+          enum: ['male', 'female', 'other'],
         },
-        timbre: { type: "string" },
-        style: { type: "string" },
+        timbre: { type: 'string' },
+        style: { type: 'string' },
         effects: {
-          type: "object",
+          type: 'object',
           properties: {
-            reverb: { type: "string" },
-            autoTune: { type: "boolean" },
+            reverb: { type: 'string' },
+            autoTune: { type: 'boolean' },
           },
           additionalProperties: true,
         },
@@ -350,24 +350,24 @@ export const promptSchema = {
       additionalProperties: true,
     },
     instrumental: {
-      type: ["object", "null"],
+      type: ['object', 'null'],
       properties: {
         instruments: {
-          type: "array",
-          items: { type: "string" },
+          type: 'array',
+          items: { type: 'string' },
         },
         bpm: {
-          type: "number",
+          type: 'number',
           minimum: 40,
           maximum: 240,
         },
-        production: { type: "string" },
+        production: { type: 'string' },
       },
       additionalProperties: true,
     },
   },
   // 至少需要 lyrics 或 style 其中之一
-  anyOf: [{ required: ["lyrics"] }, { required: ["style"] }],
+  anyOf: [{ required: ['lyrics'] }, { required: ['style'] }],
 } as const;
 ```
 
@@ -375,31 +375,31 @@ export const promptSchema = {
 
 ```typescript
 export const outputSchema = {
-  type: "object",
-  required: ["promptId", "audioUrl"],
+  type: 'object',
+  required: ['promptId', 'audioUrl'],
   properties: {
     promptId: {
-      type: "string",
-      format: "uuid",
-      description: "关联的提示词 ID",
+      type: 'string',
+      format: 'uuid',
+      description: '关联的提示词 ID',
     },
     audioUrl: {
-      type: "string",
-      format: "uri",
+      type: 'string',
+      format: 'uri',
       maxLength: 500,
-      description: "音频文件 URL",
+      description: '音频文件 URL',
     },
     modelVersion: {
-      type: "string",
-      default: "Music-2.5",
-      description: "Minimax 模型版本",
+      type: 'string',
+      default: 'Music-2.5',
+      description: 'Minimax 模型版本',
     },
     generationParams: {
-      type: "object",
+      type: 'object',
       properties: {
-        seed: { type: "number" },
+        seed: { type: 'number' },
         temperature: {
-          type: "number",
+          type: 'number',
           minimum: 0,
           maximum: 2,
         },
@@ -494,7 +494,7 @@ npx prisma generate
 ```typescript
 // prisma/seed.ts
 
-import { PrismaClient, QualityScore } from "@prisma/client";
+import { PrismaClient, QualityScore } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -502,25 +502,25 @@ async function main() {
   // 创建示例提示词
   const examplePrompt = await prisma.prompt.create({
     data: {
-      version: "1.0.0",
+      version: '1.0.0',
       lyrics:
-        "[Verse 1]\n在夜空下徘徊\n寻找失去的光彩\n\n[Chorus]\n星光闪耀，照亮前方\n勇敢前行，不再迷茫",
-      style: "Pop, Acoustic, Emotional, 80-100 BPM",
+        '[Verse 1]\n在夜空下徘徊\n寻找失去的光彩\n\n[Chorus]\n星光闪耀，照亮前方\n勇敢前行，不再迷茫',
+      style: 'Pop, Acoustic, Emotional, 80-100 BPM',
       vocal: {
-        gender: "female",
-        timbre: "清澈、温暖",
-        style: "抒情",
+        gender: 'female',
+        timbre: '清澈、温暖',
+        style: '抒情',
       },
       instrumental: {
-        instruments: ["acoustic guitar", "piano", "light percussion"],
+        instruments: ['acoustic guitar', 'piano', 'light percussion'],
         bpm: 90,
       },
-      qualityScore: "high" as QualityScore,
+      qualityScore: 'high' as QualityScore,
       qualityWarnings: [],
     },
   });
 
-  console.log("Created example prompt:", examplePrompt.id);
+  console.log('Created example prompt:', examplePrompt.id);
 }
 
 main()
@@ -556,7 +556,7 @@ export class PromptRepository {
   async create(
     data: CreatePromptDto,
     qualityScore: QualityScore,
-    warnings: string[],
+    warnings: string[]
   ): Promise<Prompt> {
     return prisma.prompt.create({
       data: {
@@ -579,8 +579,8 @@ export class PromptRepository {
       page = 1,
       pageSize = 20,
       qualityScore,
-      sortBy = "createdAt",
-      sortOrder = "desc",
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
     } = options;
 
     const where = qualityScore ? { qualityScore } : {};

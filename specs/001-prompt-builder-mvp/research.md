@@ -52,7 +52,7 @@ function calculateQualityScore(prompt: Prompt): QualityScore {
 
   // 基础分：有 lyrics 或 style (必需)
   if (!prompt.lyrics && !prompt.style) {
-    return { score: "rejected", warnings: ["必须提供歌词或风格"] };
+    return { score: 'rejected', warnings: ['必须提供歌词或风格'] };
   }
 
   // lyrics 评分 (40 分)
@@ -60,14 +60,14 @@ function calculateQualityScore(prompt: Prompt): QualityScore {
     const tags = countSectionTags(prompt.lyrics);
     if (tags >= 3) score += 40;
     else if (tags >= 1) score += 20;
-    else warnings.push("缺少章节标签，建议使用 [Verse]、[Chorus] 等");
+    else warnings.push('缺少章节标签，建议使用 [Verse]、[Chorus] 等');
 
     if (prompt.lyrics.length > 3500) {
       score -= 10;
-      warnings.push("歌词超过 3500 字符，可能影响生成");
+      warnings.push('歌词超过 3500 字符，可能影响生成');
     }
   } else {
-    warnings.push("建议添加歌词以提高生成质量");
+    warnings.push('建议添加歌词以提高生成质量');
   }
 
   // style 评分 (30 分)
@@ -77,23 +77,23 @@ function calculateQualityScore(prompt: Prompt): QualityScore {
 
     if (prompt.style.length > 2000) {
       score -= 10;
-      warnings.push("风格描述超过 2000 字符");
+      warnings.push('风格描述超过 2000 字符');
     }
   } else {
-    warnings.push("建议添加风格描述");
+    warnings.push('建议添加风格描述');
   }
 
   // vocal & instrumental 评分 (各 15 分)
   if (prompt.vocal) score += 15;
-  else warnings.push("建议添加人声参数");
+  else warnings.push('建议添加人声参数');
 
   if (prompt.instrumental) score += 15;
-  else warnings.push("建议添加器乐配置");
+  else warnings.push('建议添加器乐配置');
 
   // 计算最终评分
-  if (score >= 80) return { score: "high", warnings };
-  if (score >= 50) return { score: "medium", warnings };
-  return { score: "low", warnings };
+  if (score >= 80) return { score: 'high', warnings };
+  if (score >= 50) return { score: 'medium', warnings };
+  return { score: 'low', warnings };
 }
 ```
 
@@ -206,7 +206,7 @@ interface Prompt {
   instrumental: InstrumentalParams | null; // 器乐配置 (JSON)
 
   // 质量元数据
-  quality_score: "high" | "medium" | "low";
+  quality_score: 'high' | 'medium' | 'low';
   quality_warnings: string[]; // JSON array
 
   // 审计字段
@@ -215,7 +215,7 @@ interface Prompt {
 }
 
 interface VocalParams {
-  gender?: "male" | "female" | "other";
+  gender?: 'male' | 'female' | 'other';
   timbre?: string; // 音色描述
   style?: string; // 演唱风格
   effects?: {

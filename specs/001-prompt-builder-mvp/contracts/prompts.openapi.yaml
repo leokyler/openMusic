@@ -64,7 +64,7 @@ paths:
             enum: [asc, desc]
             default: desc
       responses:
-        "200":
+        '200':
           description: 成功返回提示词列表
           content:
             application/json:
@@ -82,7 +82,7 @@ paths:
                       items:
                         type: array
                         items:
-                          $ref: "#/components/schemas/Prompt"
+                          $ref: '#/components/schemas/Prompt'
                       page:
                         type: integer
                         example: 1
@@ -96,7 +96,7 @@ paths:
                         type: integer
                         example: 3
                   meta:
-                    $ref: "#/components/schemas/Meta"
+                    $ref: '#/components/schemas/Meta'
               examples:
                 success:
                   summary: 成功响应示例
@@ -104,32 +104,32 @@ paths:
                     success: true
                     data:
                       items:
-                        - id: "550e8400-e29b-41d4-a716-446655440000"
-                          version: "1.0.0"
+                        - id: '550e8400-e29b-41d4-a716-446655440000'
+                          version: '1.0.0'
                           lyrics: "[Verse 1]\n在夜空下徘徊\n\n[Chorus]\n星光闪耀"
-                          style: "Pop, Acoustic, 80-90 BPM"
+                          style: 'Pop, Acoustic, 80-90 BPM'
                           vocal:
-                            gender: "female"
-                            timbre: "温暖"
+                            gender: 'female'
+                            timbre: '温暖'
                           instrumental:
-                            instruments: ["acoustic guitar", "piano"]
+                            instruments: ['acoustic guitar', 'piano']
                             bpm: 85
-                          qualityScore: "high"
+                          qualityScore: 'high'
                           qualityWarnings: []
                           outputCount: 2
-                          createdAt: "2026-02-11T10:30:00Z"
-                          updatedAt: "2026-02-11T10:30:00Z"
+                          createdAt: '2026-02-11T10:30:00Z'
+                          updatedAt: '2026-02-11T10:30:00Z'
                       page: 1
                       pageSize: 20
                       total: 1
                       totalPages: 1
                     meta:
-                      timestamp: "2026-02-11T10:35:00Z"
-                      version: "1.0.0"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "500":
-          $ref: "#/components/responses/InternalError"
+                      timestamp: '2026-02-11T10:35:00Z'
+                      version: '1.0.0'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
 
     post:
       summary: 创建新提示词
@@ -142,7 +142,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreatePromptRequest"
+              $ref: '#/components/schemas/CreatePromptRequest'
             examples:
               minimal:
                 summary: 最小提示词（仅歌词）
@@ -152,17 +152,16 @@ paths:
                 summary: 完整提示词
                 value:
                   lyrics: "[Verse 1]\n在夜空下徘徊\n寻找失去的光彩\n\n[Chorus]\n星光闪耀，照亮前方\n勇敢前行，不再迷茫"
-                  style: "Pop, Acoustic, Emotional, 80-100 BPM, Female Vocals"
+                  style: 'Pop, Acoustic, Emotional, 80-100 BPM, Female Vocals'
                   vocal:
-                    gender: "female"
-                    timbre: "清澈、温暖"
-                    style: "抒情"
+                    gender: 'female'
+                    timbre: '清澈、温暖'
+                    style: '抒情'
                   instrumental:
-                    instruments:
-                      ["acoustic guitar", "piano", "light percussion"]
+                    instruments: ['acoustic guitar', 'piano', 'light percussion']
                     bpm: 90
       responses:
-        "201":
+        '201':
           description: 提示词创建成功
           content:
             application/json:
@@ -174,56 +173,56 @@ paths:
                     type: boolean
                     example: true
                   data:
-                    $ref: "#/components/schemas/Prompt"
+                    $ref: '#/components/schemas/Prompt'
                   meta:
-                    $ref: "#/components/schemas/Meta"
+                    $ref: '#/components/schemas/Meta'
               examples:
                 highQuality:
                   summary: 高质量提示词
                   value:
                     success: true
                     data:
-                      id: "550e8400-e29b-41d4-a716-446655440000"
-                      version: "1.0.0"
+                      id: '550e8400-e29b-41d4-a716-446655440000'
+                      version: '1.0.0'
                       lyrics: "[Verse 1]\n在夜空下徘徊\n\n[Chorus]\n星光闪耀"
-                      style: "Pop, Acoustic"
+                      style: 'Pop, Acoustic'
                       vocal:
-                        gender: "female"
+                        gender: 'female'
                       instrumental:
-                        instruments: ["guitar"]
-                      qualityScore: "high"
+                        instruments: ['guitar']
+                      qualityScore: 'high'
                       qualityWarnings: []
-                      createdAt: "2026-02-11T10:30:00Z"
-                      updatedAt: "2026-02-11T10:30:00Z"
+                      createdAt: '2026-02-11T10:30:00Z'
+                      updatedAt: '2026-02-11T10:30:00Z'
                     meta:
-                      timestamp: "2026-02-11T10:30:00Z"
-                      version: "1.0.0"
+                      timestamp: '2026-02-11T10:30:00Z'
+                      version: '1.0.0'
                 lowQuality:
                   summary: 低质量提示词（有警告）
                   value:
                     success: true
                     data:
-                      id: "660e8400-e29b-41d4-a716-446655440001"
-                      version: "1.0.0"
-                      lyrics: "简单歌词"
+                      id: '660e8400-e29b-41d4-a716-446655440001'
+                      version: '1.0.0'
+                      lyrics: '简单歌词'
                       style: null
                       vocal: null
                       instrumental: null
-                      qualityScore: "low"
+                      qualityScore: 'low'
                       qualityWarnings:
-                        - "缺少章节标签，建议使用 [Verse]、[Chorus] 等"
-                        - "建议添加风格描述"
-                        - "建议添加人声参数"
-                        - "建议添加器乐配置"
-                      createdAt: "2026-02-11T10:31:00Z"
-                      updatedAt: "2026-02-11T10:31:00Z"
+                        - '缺少章节标签，建议使用 [Verse]、[Chorus] 等'
+                        - '建议添加风格描述'
+                        - '建议添加人声参数'
+                        - '建议添加器乐配置'
+                      createdAt: '2026-02-11T10:31:00Z'
+                      updatedAt: '2026-02-11T10:31:00Z'
                     meta:
-                      timestamp: "2026-02-11T10:31:00Z"
-                      version: "1.0.0"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "500":
-          $ref: "#/components/responses/InternalError"
+                      timestamp: '2026-02-11T10:31:00Z'
+                      version: '1.0.0'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
 
   /api/prompts/{id}:
     get:
@@ -241,7 +240,7 @@ paths:
             type: string
             format: uuid
       responses:
-        "200":
+        '200':
           description: 成功返回提示词详情
           content:
             application/json:
@@ -253,39 +252,39 @@ paths:
                     type: boolean
                     example: true
                   data:
-                    $ref: "#/components/schemas/PromptDetail"
+                    $ref: '#/components/schemas/PromptDetail'
                   meta:
-                    $ref: "#/components/schemas/Meta"
+                    $ref: '#/components/schemas/Meta'
               examples:
                 withOutputs:
                   summary: 带输出的提示词
                   value:
                     success: true
                     data:
-                      id: "550e8400-e29b-41d4-a716-446655440000"
-                      version: "1.0.0"
+                      id: '550e8400-e29b-41d4-a716-446655440000'
+                      version: '1.0.0'
                       lyrics: "[Verse]\n测试歌词"
-                      style: "Pop"
+                      style: 'Pop'
                       vocal: null
                       instrumental: null
-                      qualityScore: "medium"
-                      qualityWarnings: ["建议添加人声参数"]
+                      qualityScore: 'medium'
+                      qualityWarnings: ['建议添加人声参数']
                       outputs:
-                        - id: "770e8400-e29b-41d4-a716-446655440002"
-                          audioUrl: "https://example.com/audio1.mp3"
-                          modelVersion: "Music-2.5"
+                        - id: '770e8400-e29b-41d4-a716-446655440002'
+                          audioUrl: 'https://example.com/audio1.mp3'
+                          modelVersion: 'Music-2.5'
                           generationParams:
                             seed: 12345
-                          createdAt: "2026-02-11T11:00:00Z"
-                      createdAt: "2026-02-11T10:30:00Z"
-                      updatedAt: "2026-02-11T10:30:00Z"
+                          createdAt: '2026-02-11T11:00:00Z'
+                      createdAt: '2026-02-11T10:30:00Z'
+                      updatedAt: '2026-02-11T10:30:00Z'
                     meta:
-                      timestamp: "2026-02-11T11:05:00Z"
-                      version: "1.0.0"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "500":
-          $ref: "#/components/responses/InternalError"
+                      timestamp: '2026-02-11T11:05:00Z'
+                      version: '1.0.0'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
 
   /api/prompts/{id}/outputs:
     get:
@@ -303,7 +302,7 @@ paths:
             type: string
             format: uuid
       responses:
-        "200":
+        '200':
           description: 成功返回输出列表
           content:
             application/json:
@@ -317,13 +316,13 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: "#/components/schemas/Output"
+                      $ref: '#/components/schemas/Output'
                   meta:
-                    $ref: "#/components/schemas/Meta"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "500":
-          $ref: "#/components/responses/InternalError"
+                    $ref: '#/components/schemas/Meta'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
 
     post:
       summary: 关联新输出
@@ -344,22 +343,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateOutputRequest"
+              $ref: '#/components/schemas/CreateOutputRequest'
             examples:
               basic:
                 summary: 基本输出
                 value:
-                  audioUrl: "https://file.hailuoai.com/audio/123456.mp3"
+                  audioUrl: 'https://file.hailuoai.com/audio/123456.mp3'
               withParams:
                 summary: 带生成参数
                 value:
-                  audioUrl: "https://file.hailuoai.com/audio/123456.mp3"
-                  modelVersion: "Music-2.5"
+                  audioUrl: 'https://file.hailuoai.com/audio/123456.mp3'
+                  modelVersion: 'Music-2.5'
                   generationParams:
                     seed: 42
                     temperature: 0.8
       responses:
-        "201":
+        '201':
           description: 输出关联成功
           content:
             application/json:
@@ -371,22 +370,21 @@ paths:
                     type: boolean
                     example: true
                   data:
-                    $ref: "#/components/schemas/Output"
+                    $ref: '#/components/schemas/Output'
                   meta:
-                    $ref: "#/components/schemas/Meta"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "500":
-          $ref: "#/components/responses/InternalError"
+                    $ref: '#/components/schemas/Meta'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
 
 components:
   schemas:
     Prompt:
       type: object
-      required:
-        [id, version, qualityScore, qualityWarnings, createdAt, updatedAt]
+      required: [id, version, qualityScore, qualityWarnings, createdAt, updatedAt]
       properties:
         id:
           type: string
@@ -395,7 +393,7 @@ components:
         version:
           type: string
           description: 语义化版本号
-          example: "1.0.0"
+          example: '1.0.0'
         lyrics:
           type: string
           nullable: true
@@ -461,19 +459,18 @@ components:
 
     PromptDetail:
       allOf:
-        - $ref: "#/components/schemas/Prompt"
+        - $ref: '#/components/schemas/Prompt'
         - type: object
           properties:
             outputs:
               type: array
               items:
-                $ref: "#/components/schemas/Output"
+                $ref: '#/components/schemas/Output'
               description: 关联的输出列表
 
     Output:
       type: object
-      required:
-        [id, promptId, audioUrl, modelVersion, generationParams, createdAt]
+      required: [id, promptId, audioUrl, modelVersion, generationParams, createdAt]
       properties:
         id:
           type: string
@@ -491,7 +488,7 @@ components:
         modelVersion:
           type: string
           description: Minimax 模型版本
-          example: "Music-2.5"
+          example: 'Music-2.5'
         generationParams:
           type: object
           description: 生成参数
@@ -541,7 +538,7 @@ components:
           maxLength: 500
         modelVersion:
           type: string
-          default: "Music-2.5"
+          default: 'Music-2.5'
         generationParams:
           type: object
           additionalProperties: true
@@ -557,7 +554,7 @@ components:
         version:
           type: string
           description: API 版本
-          example: "1.0.0"
+          example: '1.0.0'
 
     Error:
       type: object
@@ -581,7 +578,7 @@ components:
               description: 详细错误信息
               additionalProperties: true
         meta:
-          $ref: "#/components/schemas/Meta"
+          $ref: '#/components/schemas/Meta'
 
   responses:
     BadRequest:
@@ -589,59 +586,59 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: '#/components/schemas/Error'
           examples:
             validationError:
               summary: 验证失败
               value:
                 success: false
                 error:
-                  code: "VALIDATION_ERROR"
-                  message: "请求参数验证失败"
+                  code: 'VALIDATION_ERROR'
+                  message: '请求参数验证失败'
                   details:
-                    field: "lyrics"
-                    error: "歌词长度超过 3500 字符"
+                    field: 'lyrics'
+                    error: '歌词长度超过 3500 字符'
                 meta:
-                  timestamp: "2026-02-11T10:30:00Z"
-                  version: "1.0.0"
+                  timestamp: '2026-02-11T10:30:00Z'
+                  version: '1.0.0'
 
     NotFound:
       description: 资源不存在
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: '#/components/schemas/Error'
           examples:
             promptNotFound:
               summary: 提示词不存在
               value:
                 success: false
                 error:
-                  code: "NOT_FOUND"
-                  message: "提示词不存在"
+                  code: 'NOT_FOUND'
+                  message: '提示词不存在'
                   details:
-                    id: "550e8400-e29b-41d4-a716-446655440000"
+                    id: '550e8400-e29b-41d4-a716-446655440000'
                 meta:
-                  timestamp: "2026-02-11T10:30:00Z"
-                  version: "1.0.0"
+                  timestamp: '2026-02-11T10:30:00Z'
+                  version: '1.0.0'
 
     InternalError:
       description: 服务器内部错误
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: '#/components/schemas/Error'
           examples:
             databaseError:
               summary: 数据库错误
               value:
                 success: false
                 error:
-                  code: "INTERNAL_ERROR"
-                  message: "服务器内部错误，请稍后重试"
+                  code: 'INTERNAL_ERROR'
+                  message: '服务器内部错误，请稍后重试'
                 meta:
-                  timestamp: "2026-02-11T10:30:00Z"
-                  version: "1.0.0"
+                  timestamp: '2026-02-11T10:30:00Z'
+                  version: '1.0.0'
 
 tags:
   - name: Prompts

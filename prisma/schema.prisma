@@ -1,0 +1,69 @@
+// Prisma Schema - openMusic Prompt Builder MVP
+// 定义数据库模型和关系
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/**
+ * Prompt 模型 - 音乐生成提示词
+ */
+model Prompt {
+  id               String       @id @default(uuid())
+  version          String       @default("1.0.0")
+
+  // 四个主要组件
+  lyrics           String?      @db.Text
+  style            String?      @db.Text
+  vocal            Json?
+  instrumental     Json?
+
+  // 质量元数据
+  qualityScore     QualityScore @map("quality_score")
+  qualityWarnings  Json         @default("[]") @map("quality_warnings")
+
+  // 关联
+  outputs          Output[]
+
+  // 审计字段
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+
+  @@index([createdAt(sort: Desc)])
+  @@index([qualityScore])
+  @@map("prompts")
+}
+
+/**
+ * Output 模型 - 音频输出关联
+ */
+model Output {
+  id                String   @id @default(uuid())
+  promptId          String   @map("prompt_id")
+
+  audioUrl          String   @map("audio_url") @db.VarChar(500)
+  modelVersion      String   @map("model_version") @default("Music-2.5") @db.VarChar(50)
+  generationParams  Json     @default("{}") @map("generation_params")
+
+  // 关联
+  prompt            Prompt   @relation(fields: [promptId], references: [id], onDelete: Cascade)
+
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  @@index([promptId])
+  @@index([createdAt(sort: Desc)])
+  @@map("outputs")
+}
+
+/**
+ * 质量评分枚举
+ */
+enum QualityScore {
+  high
+  medium
+  low
+}
