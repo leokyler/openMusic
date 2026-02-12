@@ -92,75 +92,20 @@ psql -d openmusic -c "\d prompts;"
 
 ### 3.1 创建剪贴板工具
 
-**File**: `src/lib/clipboard.ts`
+**File**: `lib/clipboard.ts`
 
-```typescript
-import Clipboard from 'clipboard';
+实现两个核心函数：
 
-export interface ClipboardOptions {
-  onSuccess?: (text: string) => void;
-  onError?: (error: Error) => void;
-}
+- `copyToClipboard(text, options)` - 使用 clipboard.js 复制文本到剪贴板，自动降级到 execCommand
+- `formatPromptForCopy(prompt)` - 格式化提示词为剪贴板文本，只包含已填写的字段
 
-/**
- * 复制文本到剪贴板，使用 clipboard.js 库
- * 自动降级到 document.execCommand 以支持旧浏览器
- *
- * @param text - 要复制的文本内容
- * @param element - 触发复制的 DOM 元素（可选）
- * @returns Clipboard 实例（用于事件监听）
- */
-export function copyToClipboard(text: string, options: ClipboardOptions = {}): Clipboard | null {
-  try {
-    // 创建临时 text area 用于降级方案
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    textarea.setAttribute('readonly', '');
-    textarea.style.position = 'absolute';
-    textarea.style.left = '-9999px';
-    document.body.appendChild(textarea);
+**实现规范**（参考 [data-model.md](./data-model.md) 和 [research.md](./research.md)）：
 
-    // 初始化 clipboard.js
-    const clipboard = new Clipboard(textarea, {
-      text: () => text,
-
-      // 成功回调
-      action: () => {
-        options.onSuccess?.(text);
-        document.body.removeChild(textarea);
-      },
-    });
-  } catch (error) {
-    options.onError?.(error as Error);
-    return null;
-  }
-
-  return clipboard;
-}
-
-/**
- * 格式化提示词为剪贴板文本
- * 只包含已填写的字段，使用英文标签
- */
-export function formatPromptForCopy(prompt: Partial<Prompt>): string {
-  const fields: string[] = [];
-
-  if (prompt.lyrics) {
-    fields.push(`lyrics:\n${prompt.lyrics}`);
-  }
-  if (prompt.style) {
-    fields.push(`style:\n${prompt.style}`);
-  }
-  if (prompt.vocal) {
-    fields.push(`vocal:\n${prompt.vocal}`);
-  }
-  if (prompt.instrumental) {
-    fields.push(`instrumental:\n${prompt.instrumental}`);
-  }
-
-  return fields.join('\n\n');
-}
-```
+- 格式化顺序：lyrics → style → vocal → instrumental（仅包含非空字段）
+- 字段标签：英文名称 + 冒号 + 换行符（例如：`lyrics:\n[Verse]\n...`）
+- 字段分隔：空行（`\n\n`）
+- 降级策略：clipboard.js 自动处理 Clipboard API → document.execCommand('copy')
+- 错误处理：提供 `onSuccess` 和 `onError` 回调选项
 
 ### 3.2 测试剪贴板工具
 
@@ -175,7 +120,7 @@ pnpm test:unit tests/unit/lib/clipboard.test.ts
 
 ### 4.1 实现按钮组件
 
-**File**: `src/components/prompt/CopyPromptButton.tsx`
+**File**: `components/prompt/CopyPromptButton.tsx`
 
 ```tsx
 'use client';
@@ -273,7 +218,7 @@ async function trackCopy(promptId: string) {
 
 ### 4.2 添加到表单页面
 
-**File**: `src/app/prompts/new/page.tsx`
+**File**: `app/prompts/new/page.tsx`
 
 ```tsx
 import { CopyPromptButton } from '@/components/prompt/CopyPromptButton';
@@ -296,7 +241,7 @@ export default function NewPromptPage() {
 
 ### 4.3 添加到详情页面
 
-**File**: `src/app/prompts/[id]/page.tsx`
+**File**: `app/prompts/[id]/page.tsx`
 
 ```tsx
 import { CopyPromptButton } from '@/components/prompt/CopyPromptButton';
@@ -330,7 +275,7 @@ export default function PromptDetailPage({ params }: { params: { id: string } })
 
 ### 5.1 创建复制追踪路由
 
-**File**: `src/app/api/prompts/[id]/copy/route.ts`
+**File**: `app/api/prompts/[id]/copy/route.ts`
 
 ```typescript
 import { NextRequest, NextResponse } from 'next/server';

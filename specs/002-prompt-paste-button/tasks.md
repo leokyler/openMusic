@@ -13,6 +13,15 @@
 
 **Tech Stack**: TypeScript 5.9.3 / Node.js (pnpm 10.19.0), Next.js 16.1.5, React 19.2.3, clipboard.js, Prisma 7.3.0, PostgreSQL
 
+**Path Conventions (Next.js App Router without src)**:
+
+- App Router: `app/` at repository root
+- Components: `components/` at repository root
+- Libraries: `lib/` at repository root
+- Types: `lib/types/` (existing types location)
+- Database: `prisma/` at repository root
+- Tests: `tests/` at repository root
+
 **Total Tasks**: 43
 
 - Phase 1 (Setup): 4 tasks
@@ -26,61 +35,64 @@
 ## Dependency Graph
 
 ```
-┌──────────────────────────────────────────────────────────────────┐
-│                    Phase 1: Setup                        │
-│  ┌─────────┐  ┌─────────────┐  ┌──────────────┐ │
-│  │ T001     │  │ T002        │  │ T003         │ │
-│  │ Install   │  │ Install      │  │ Create        │ │
-│  │ clipboard │  │ update types │  │ directories   │ │
-│  └─────┬───┘  └──────┬───────┘  └──────┬───────┘ │
-└─────────┼─────────────────┼─────────────┼───────────────┘
-          │             │             │
-          ▼             ▼             ▼
-┌──────────────────────────────────────────────────────────────────┐
-│              Phase 2: Foundational                      │
-│  ┌──────────┐  ┌──────────┐  ┌──────────────┐ │
-│  │ T004      │  │ T005      │  │ T006         │ │
-│  │ Prisma    │  │ Prisma    │  │ Prisma       │ │
-│  │ schema     │  │ migration  │  │ generate      │ │
-│  └─────┬────┘  └─────┬──────┘  └──────┬───────┘ │
-└─────────┼────────────┼─────────────┼───────────────┘
-          │             │             │
-          ▼             ▼             ▼
-┌──────────────────────────────────────────────────────────────────┐
-│          Phase 3: User Story 1 (P1) - Form Page       │
-│  ┌──────────┐  ┌──────────┐  ┌──────────────┐ │
-│  │ T007-T009 │  │ T010-T014 │  │ T015-T021    │ │
-│  │ Clipboard  │  │ Types &    │  │ Components    │ │
-│  │ utils      │  │ Formatting │  │ Integration   │ │
-│  └─────┬────┘  └─────┬──────┘  └──────┬───────┘ │
-└─────────┼────────────┼─────────────┼───────────────┘
-          │             │             │
-          ▼             ▼             ▼
-┌──────────────────────────────────────────────────────────────────┐
-│          Phase 4: User Story 2 (P2) - Detail Page      │
-│  ┌──────────┐  ┌─────────────────────────────────────┐ │
-│  │ T022-T027 │  │ T028-T034                      │ │
-│  │ API Route  │  │ Detail Page Integration           │ │
-│  └──────────┘  └─────────────────────────────────────┘ │
-└──────────────────────────────────────────────────────────────────┘
-          │             │
-          ▼             ▼
-┌──────────────────────────────────────────────────────────────────┐
-│              Phase 5: Polish                          │
-│  ┌──────────┐  ┌──────────┐  ┌──────────────┐ │
-│  │ T035      │  │ T036      │  │ T037         │ │
-│  │ E2E Tests  │  │ Unit Tests │  │ Documentation  │ │
-│  └──────────┘  └──────────┘  └──────────────┘ │
-└──────────────────────────────────────────────────────────────────┘
+ ┌──────────────────────────────────────────────────────────────────┐
+ │                    Phase 1: Setup                        │
+ │  ┌─────────┐  ┌─────────────┐  ┌──────────────┐ │
+ │  │ T001     │  │ T002        │  │ T003         │ │
+ │  │ Install   │  │ Update      │  │ Create        │ │
+ │  │ clipboard │  │ types       │  │ directories   │ │
+ │  └─────┬───┘  └──────┬───────┘  └──────┬───────┘ │
+ └─────────┼─────────────────┼─────────────┼───────────────┘
+           │             │             │
+           ▼             ▼             ▼
+ ┌──────────────────────────────────────────────────────────────────┐
+ │              Phase 2: Foundational                      │
+ │  ┌──────────┐  ┌──────────┐  ┌──────────────┐ │
+ │  │ T005      │  │ T007      │  │ T009         │ │
+ │  │ Prisma    │  │ Prisma    │  │ API          │ │
+ │  │ schema    │  │ migration  │  │ route        │ │
+ │  └─────┬────┘  └─────┬──────┘  └──────┬───────┘ │
+ └─────────┼────────────┼─────────────┼───────────────┘
+           │             │             │
+           ▼             ▼             ▼
+ ┌──────────────────────────────────────────────────────────────────┐
+ │          Phase 3: User Story 1 (P1) - Form Page       │
+ │  ┌──────────┐  ┌──────────┐  ┌──────────────┐ │
+ │  │ T013-T014 │  │ T015      │  │ T021         │ │
+ │  │ Clipboard  │  │ Component │  │ Form         │ │
+ │  │ utils     │  │           │  │ integration  │ │
+ │  └─────┬────┘  └─────┬──────┘  └──────┬───────┘ │
+ └─────────┼────────────┼─────────────┼───────────────┘
+           │             │             │
+           ▼             ▼             ▼
+ ┌──────────────────────────────────────────────────────────────────┐
+ │          Phase 4: User Story 2 (P2) - Detail Page      │
+ │  ┌──────────┐  ┌─────────────────────────────────────┐ │
+ │  │ T024-T034 │  │                                  │ │
+ │  │ Detail    │  │ Reuse CopyPromptButton component   │ │
+ │  │ Page      │  │ from US1                         │ │
+ │  └──────────┘  └─────────────────────────────────────┘ │
+ └──────────────────────────────────────────────────────────────────┘
+           │
+           ▼
+ ┌──────────────────────────────────────────────────────────────────┐
+ │              Phase 5: Polish                          │
+ │  ┌──────────┐  ┌──────────┐  ┌──────────────┐ │
+ │  │ T035      │  │ T037      │  │ T038-T043    │ │
+ │  │ E2E Tests  │  │ Unit Tests │  │ Docs & QA    │ │
+ │  └──────────┘  └──────────┘  └──────────────┘ │
+ └──────────────────────────────────────────────────────────────────┘
 ```
 
-**Critical Path**: T001 → T002 → T003 → T004 → T005 → T006 → T007 → T010 → T015 (MVP: Form page copy button)
+**Critical Path**: T001 → T002 → T003 → T005 → T007 → T009 → T013 → T015 → T021 (MVP: Form page copy button)
 
 **Parallel Opportunities**:
 
-- T007, T008, T009 can be developed in parallel (after T006)
-- T022-T027 can be done in parallel with Phase 3 tasks
-- T035, T036, T037 can be done in parallel after Phase 4
+- T002, T003 can run in parallel with T001
+- T013, T014 can run in parallel after T009
+- T015-T020 can be developed in parallel (component features)
+- T024-T034 can be done in parallel with Phase 3 tasks
+- T035, T036, T037, T038-T043 can be done in parallel after Phase 4
 
 ---
 
@@ -95,14 +107,14 @@
       Command: `pnpm add clipboard @types/clipboard`
       Verify: Check clipboard@^2.0.11 in dependencies
 
-- [ ] T002 [P] Update TypeScript type definitions for Prompt with copy tracking fields
-      File: `src/types/prompt.ts`
+- [ ] T002 [P] Update existing TypeScript type definitions for Prompt with copy tracking fields
+      File: `lib/types/prompt.ts` (or existing types location)
       Add fields: `copy_count: number`, `last_copied_at: string | null`
       Verify: No TypeScript errors in file
 
 - [ ] T003 [P] Create directory structure for feature components and utilities
-      Directories: `src/components/prompt/`, `src/lib/`, `tests/unit/lib/`
-      Command: `mkdir -p src/components/prompt src/lib tests/unit/lib`
+      Directories: `components/prompt/`, `lib/`, `tests/unit/lib/`
+      Command: `mkdir -p components/prompt lib tests/unit/lib`
       Verify: All directories exist
 
 - [ ] T004 Create ESLint and Prettier configuration for code quality tools
@@ -159,12 +171,12 @@
       Verify: All contract tests pass
 
 - [ ] T011 [P] Implement copy tracking API route handler
-      File: `src/app/api/prompts/[id]/copy/route.ts`
+      File: `app/api/prompts/[id]/copy/route.ts`
       Logic: Atomic increment of copy_count, update last_copied_at
       Verify: Returns CopyTrackingResponse with proper structure
 
 - [ ] T012 [P] Add error handling for invalid prompt IDs in copy API
-      File: `src/app/api/prompts/[id]/copy/route.ts`
+      File: `app/api/prompts/[id]/copy/route.ts`
       Logic: Check prompt existence before update, return 404 if not found
       Verify: 404 response matches OpenAPI spec
 
@@ -192,13 +204,13 @@
 ### Clipboard Utility Tasks
 
 - [ ] T013 [P] Implement copyToClipboard utility function with clipboard.js integration
-      File: `src/lib/clipboard.ts`
+      File: `lib/clipboard.ts`
       Functions: `copyToClipboard(text, options)`, `formatPromptForCopy(prompt)`
       Features: clipboard.js initialization, fallback to execCommand, success/error callbacks
       Verify: Function returns Clipboard instance, handles errors gracefully
 
 - [ ] T014 Implement formatPromptForCopy utility to format prompt with English labels
-      File: `src/lib/clipboard.ts`
+      File: `lib/clipboard.ts`
       Logic: Only include filled fields, use English labels (lyrics, style, vocal, instrumental)
       Output: Formatted string with field labels and content separated by newlines
       Verify: Output matches specification in data-model.md
@@ -206,40 +218,40 @@
 ### Form Page Integration Tasks
 
 - [ ] T015 [P] Create CopyPromptButton reusable component with icon and label variants
-      File: `src/components/prompt/CopyPromptButton.tsx`
+      File: `components/prompt/CopyPromptButton.tsx`
       Props: `prompt: Partial<Prompt>`, `variant?: 'icon-only' | 'with-label'`
       Features: Copy icon, success state (Check icon), disabled state, keyboard accessible
       Verify: Component renders button, accepts props, has proper ARIA labels
 
 - [ ] T016 Add loading state to CopyPromptButton during copy operation
-      File: `src/components/prompt/CopyPromptButton.tsx`
+      File: `components/prompt/CopyPromptButton.tsx`
       State: `tracking: boolean` to disable button during async copy
       UI: Show loading spinner or disabled state when copying
       Verify: Button disabled during copy operation, re-enables after completion
 
 - [ ] T017 Implement success Toast notification after successful copy operation
-      File: `src/components/prompt/CopyPromptButton.tsx`
+      File: `components/prompt/CopyPromptButton.tsx`
       UI: "已复制到剪贴板" message, auto-dismiss after 2 seconds
       Verify: Toast appears on success, disappears after timeout
 
 - [ ] T018 Add error handling for clipboard permission denial
-      File: `src/components/prompt/CopyPromptButton.tsx`
+      File: `components/prompt/CopyPromptButton.tsx`
       UI: Error message with manual copy instructions when clipboard access denied
       Verify: Error Toast displayed when permission rejected, includes manual instructions
 
 - [ ] T019 [P] Implement keyboard accessibility attributes on CopyPromptButton
-      File: `src/components/prompt/CopyPromptButton.tsx`
+      File: `components/prompt/CopyPromptButton.tsx`
       Attributes: `aria-label="复制提示词到剪贴板"`, `type="button"`, visible focus styles
       Verify: Tab navigates to button, Enter/Space triggers copy, focus outline visible
 
 - [ ] T020 Add validation to prevent copy when all prompt fields are empty
-      File: `src/components/prompt/CopyPromptButton.tsx`
+      File: `components/prompt/CopyPromptButton.tsx`
       Logic: Check if at least one field (lyrics, style, vocal, instrumental) has content
       UI: Show error Toast "请先填写提示词内容" if all fields empty
       Verify: Copy button disabled or shows error when all fields empty
 
 - [ ] T021 Integrate CopyPromptButton into prompt form page bottom action area
-      File: `src/app/prompts/new/page.tsx`
+      File: `app/prompts/new/page.tsx`
       Location: Below form fields, in action section
       Variant: `with-label` to show "复制" text alongside icon
       Verify: Button visible on form page, properly positioned
@@ -247,13 +259,13 @@
 ### API Integration Tasks
 
 - [ ] T022 [P] Implement async copy tracking API call in CopyPromptButton component
-      File: `src/components/prompt/CopyPromptButton.tsx`
+      File: `components/prompt/CopyPromptButton.tsx`
       Function: `trackCopy(promptId)` calls POST /api/prompts/:id/copy
       Timing: Async, non-blocking, logs error to console if fails
       Verify: Network request made after successful copy, doesn't block UI
 
 - [ ] T023 Add debounce mechanism to prevent duplicate copy operations
-      File: `src/components/prompt/CopyPromptButton.tsx`
+      File: `components/prompt/CopyPromptButton.tsx`
       Timing: Disable button for 500ms after copy, prevent rapid repeated clicks
       Verify: Multiple rapid clicks result in single copy operation
 
@@ -273,61 +285,59 @@
 ### Detail Page Integration Tasks
 
 - [ ] T024 [P] Add CopyPromptButton to detail page header (top position)
-      File: `src/app/prompts/[id]/page.tsx`
+      File: `app/prompts/[id]/page.tsx`
       Location: Page header, aligned with title or breadcrumbs
       Variant: `icon-only` for compact display
       Verify: Copy button visible at top of detail page
 
 - [ ] T025 Add CopyPromptButton to detail page bottom (secondary position)
-      File: `src/app/prompts/[id]/page.tsx`
+      File: `app/prompts/[id]/page.tsx`
       Location: Below prompt content, in action section
       Variant: `with-label` for clear call-to-action
       Verify: Copy button visible at bottom of detail page
 
-- [ ] T026 Update Prompt type definition to include copy tracking fields from API response
-      File: `src/types/prompt.ts`
+- [ ] T026 Update existing Prompt type definition to include copy tracking fields from API response
+      File: `lib/types/prompt.ts` (or existing types location)
       Fields: Add `copy_count?: number`, `last_copied_at?: string | null` to interface
       Verify: TypeScript compiles without errors, fields optional
 
 - [ ] T027 Display copy metrics (copy_count, last_copied_at) on detail page
-      File: `src/app/prompts/[id]/page.tsx`
+      File: `app/prompts/[id]/page.tsx`
       UI: Show "已复制 X 次，最后复制于 [时间]" if copy_count > 0
       Verify: Metrics displayed on detail page, formatted in Chinese
 
-### Data Fetching Tasks
-
 - [ ] T028 Update detail page API call to include copy tracking fields
-      File: `src/app/prompts/[id]/page.tsx`
+      File: `app/prompts/[id]/page.tsx`
       Query: Add `copy_count`, `last_copied_at` to SELECT fields
       Verify: API response includes tracking data
 
 - [ ] T029 Add loading state handling while fetching prompt with copy metrics
-      File: `src/app/prompts/[id]/page.tsx`
+      File: `app/prompts/[id]/page.tsx`
       State: Show skeleton or spinner while fetching prompt data
       Verify: Loading indicator visible during data fetch
 
 - [ ] T030 Implement error handling for detail page API failures
-      File: `src/app/prompts/[id]/page.tsx`
+      File: `app/prompts/[id]/page.tsx`
       UI: Error message when prompt fetch fails, retry option
       Verify: Error state displayed when API fails
 
 - [ ] T031 Add responsive layout for detail page copy buttons (mobile)
-      File: `src/app/prompts/[id]/page.tsx`
+      File: `app/prompts/[id]/page.tsx`
       Layout: Top button on desktop, both top and bottom accessible on mobile
       Verify: Buttons accessible on mobile devices, touch-friendly
 
 - [ ] T032 Add focus management for copy buttons after page load
-      File: `src/app/prompts/[id]/page.tsx`
+      File: `app/prompts/[id]/page.tsx`
       Logic: Set focus to page title or main content on mount
       Verify: Focus starts at appropriate element for keyboard navigation
 
 - [ ] T033 Implement aria-live region for success/error Toast announcements
-      File: `src/app/prompts/[id]/page.tsx`
+      File: `app/prompts/[id]/page.tsx`
       Attribute: `aria-live="polite"` on Toast container
       Verify: Screen readers announce Toast messages
 
 - [ ] T034 Add copy button state management for detail page (copied vs default)
-      File: `src/app/prompts/[id]/page.tsx`
+      File: `app/prompts/[id]/page.tsx`
       State: Track `copied: boolean` per button (separate state for top and bottom)
       Verify: Each button maintains independent copied state
 
@@ -375,7 +385,7 @@
       Verify: Quickstart reflects actual implementation experience
 
 - [ ] T040 Create example usage documentation for CopyPromptButton component
-      File: `src/components/prompt/CopyPromptButton.md` or inline comments
+      File: `components/prompt/CopyPromptButton.md` or inline comments
       Content: Props interface, usage examples, accessibility notes
       Verify: Component has usage documentation
 
@@ -580,6 +590,13 @@ T043 - Prettier
 ## Notes
 
 **Task Estimates**: Each task estimated 0.5-2 hours depending on complexity
+
+**Next.js App Router Structure (without src directory)**:
+
+- All paths are at repository root: `app/`, `components/`, `lib/`, `prisma/`, `tests/`
+- API routes use `app/api/` folder structure
+- Pages use `app/` folder with file-based routing
+- **Types are in `lib/types/` (existing location, do not create `types/` directory)**
 
 **Definition of Done for Each Task**:
 

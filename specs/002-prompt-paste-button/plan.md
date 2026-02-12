@@ -88,30 +88,29 @@ specs/002-prompt-paste-button/
 
 ### Source Code (repository root)
 
-Based on existing Next.js monorepo structure from feature 001:
+Based on existing Next.js App Router structure from feature 001 (without src directory):
 
 ```text
-src/
-├── app/
-│   ├── prompts/
-│   │   ├── [id]/              # Prompt detail page
-│   │   │   └── page.tsx      # Add copy button
-│   │   └── new/              # Prompt form page
-│   │       └── page.tsx        # Add copy button
-│   └── api/
-│       └── prompts/
-│           └── [id]/
-│               └── copy/route.ts  # POST /api/prompts/:id/copy (track copy metrics)
-├── components/
-│   ├── prompt/
-│   │   ├── CopyPromptButton.tsx     # New: Reusable copy button component
-│   │   └── PromptForm.tsx           # Modify: Add copy button to form
-│   └── ui/                          # Existing shadcn/ui components
-├── lib/
-│   ├── clipboard.ts                    # New: Clipboard utilities (Clipboard API + fallback)
-│   └── prompt-formatter.ts            # New: Format prompt for copy (English labels)
+app/
+├── prompts/
+│   ├── [id]/              # Prompt detail page
+│   │   └── page.tsx      # Add copy button
+│   └── new/              # Prompt form page
+│       └── page.tsx        # Add copy button
+└── api/
+    └── prompts/
+        └── [id]/
+            └── copy/route.ts  # POST /api/prompts/:id/copy (track copy metrics)
+components/
+├── prompt/
+│   ├── CopyPromptButton.tsx     # New: Reusable copy button component
+│   └── PromptForm.tsx           # Modify: Add copy button to form
+└── ui/                          # Existing shadcn/ui components
+lib/
+├── clipboard.ts                    # New: Clipboard utilities (Clipboard API + fallback)
+├── prompt-formatter.ts            # New: Format prompt for copy (English labels)
 └── types/
-    └── prompt.ts                       # Modify: Extend Prompt type with copy tracking
+    └── prompt.ts                   # Modify: Extend Prompt type with copy tracking (existing location)
 
 prisma/
 └── schema.prisma                       # Modify: Add copy_count and last_copied_at to Prompt model
