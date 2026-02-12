@@ -15,8 +15,9 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.4.0",
     "@prisma/client": "^7.3.0",
-    "ajh": "^0.0.0",
+    "ajv": "^8.0.0",
     "ajv-formats": "^3.0.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

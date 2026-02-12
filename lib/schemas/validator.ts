@@ -2,14 +2,14 @@
  * Schema 验证工具
  * 使用 Ajv 进行 JSON Schema 验证
  */
-import Ajv from 'ajv';
+import ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import { promptSchema, createPromptDtoSchema } from './prompt.schema';
 import { outputSchema, createOutputDtoSchema } from './output.schema';
 
 // 创建 Ajv 实例并添加格式支持
-const ajv = new Ajv({ allErrors: true });
-addFormats(ajv);
+const ajvInstance = new ajv({ allErrors: true });
+addFormats(ajvInstance);
 
 /**
  * 验证结果类型
@@ -34,22 +34,22 @@ export interface ValidationResult {
 /**
  * 验证 CreatePromptDto
  */
-export const validateCreatePromptDto = ajv.compile(createPromptDtoSchema);
+export const validateCreatePromptDto = ajvInstance.compile(createPromptDtoSchema);
 
 /**
  * 验证 Prompt 完整数据
  */
-export const validatePrompt = ajv.compile(promptSchema);
+export const validatePrompt = ajvInstance.compile(promptSchema);
 
 /**
  * 验证 CreateOutputDto
  */
-export const validateCreateOutputDto = ajv.compile(createOutputDtoSchema);
+export const validateCreateOutputDto = ajvInstance.compile(createOutputDtoSchema);
 
 /**
  * 验证 Output 完整数据
  */
-export const validateOutput = ajv.compile(outputSchema);
+export const validateOutput = ajvInstance.compile(outputSchema);
 
 /**
  * 格式化 Ajv 错误信息
