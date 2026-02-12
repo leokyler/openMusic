@@ -6,6 +6,7 @@ import { outputService } from '@/lib/services/output.service';
 import { validateOutputCreate } from '@/lib/middleware/validation';
 import { handleError } from '@/lib/middleware/error-handler';
 import { createdResponse, successResponse, notFoundResponse } from '@/lib/utils/api-response';
+import { promptService } from '@/lib/services/prompt.service';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -39,8 +40,6 @@ export async function POST(request: Request, { params }: RouteParams) {
  * GET /api/prompts/[id]/outputs
  * 获取提示词的所有输出
  */
-import { promptService } from '@/lib/services/prompt.service';
-
 export async function GET(request: Request, { params }: RouteParams) {
   try {
     const { id: promptId } = await params;
