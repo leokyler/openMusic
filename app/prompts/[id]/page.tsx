@@ -7,6 +7,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { PromptDetail } from '@/components/prompt/prompt-detail';
+import { PromptDetailSkeleton } from '@/components/skeleton';
 import type { Prompt } from '@/lib/types/prompt';
 
 interface PageProps {
@@ -45,31 +46,37 @@ export default function PromptDetailPage({ params }: PageProps) {
   }, [params]);
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="container mx-auto px-4 py-6 sm:py-8 max-w-4xl">
       {/* 返回按钮 */}
-      <div className="mb-6">
-        <Link href="/prompts" className="text-blue-600 hover:underline">
-          ← 返回列表
+      <div className="mb-4 sm:mb-6">
+        <Link
+          href="/prompts"
+          className="inline-flex items-center text-blue-600 hover:underline text-sm sm:text-base"
+        >
+          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          返回列表
         </Link>
       </div>
 
       {/* 加载状态 */}
-      {isLoading && (
-        <div className="text-center py-16">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <p className="text-gray-600 mt-4">加载中...</p>
-        </div>
-      )}
+      {isLoading && <PromptDetailSkeleton />}
 
       {/* 错误状态 */}
       {error && (
-        <div className="text-center py-16">
-          <div className="text-6xl mb-4">❌</div>
-          <h3 className="text-xl font-medium text-gray-900 mb-2">获取失败</h3>
-          <p className="text-gray-600 mb-6">{error}</p>
+        <div className="text-center py-12 sm:py-16 px-4">
+          <div className="text-4xl sm:text-6xl mb-4">❌</div>
+          <h3 className="text-lg sm:text-xl font-medium text-gray-900 mb-2">获取失败</h3>
+          <p className="text-gray-600 mb-6 text-sm sm:text-base">{error}</p>
           <Link
             href="/prompts"
-            className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="inline-block px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm sm:text-base"
           >
             返回列表
           </Link>

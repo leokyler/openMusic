@@ -75,20 +75,30 @@ export default function PromptsListPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-6 sm:py-8 max-w-7xl">
       {/* 页面标题 */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">音乐提示词</h1>
-          <p className="text-gray-600">管理和查看你的音乐生成提示词</p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+        <div className="min-w-0">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">
+            音乐提示词
+          </h1>
+          <p className="text-sm sm:text-base text-gray-600">管理和查看你的音乐生成提示词</p>
         </div>
 
         {/* 创建按钮 */}
         <Link
           href="/prompts/new"
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+          className="inline-flex items-center justify-center px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm sm:text-base transition-colors"
         >
-          + 创建提示词
+          <svg
+            className="w-5 h-5 mr-1 sm:mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+          <span>创建提示词</span>
         </Link>
       </div>
 
@@ -102,8 +112,8 @@ export default function PromptsListPage() {
 
       {/* 过滤器（可选） */}
       <div className="mb-6 bg-white p-4 rounded-lg border">
-        <div className="flex gap-4 items-end">
-          <div className="flex-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
             <label htmlFor="quality-filter" className="block text-sm font-medium mb-1">
               质量筛选
             </label>
@@ -128,7 +138,7 @@ export default function PromptsListPage() {
             </select>
           </div>
 
-          <div className="flex-1">
+          <div>
             <label htmlFor="sort-filter" className="block text-sm font-medium mb-1">
               排序方式
             </label>
