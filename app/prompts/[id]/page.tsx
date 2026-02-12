@@ -5,6 +5,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { PromptDetail } from '@/components/prompt/prompt-detail';
 import type { Prompt } from '@/lib/types/prompt';

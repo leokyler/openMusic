@@ -9,6 +9,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { PromptList } from '@/components/prompt/prompt-list';
 import type { Prompt, PromptListOptions } from '@/lib/types/prompt';
 import type { PaginatedResult } from '@/lib/types/common';
+import Link from 'next/link';
 
 export default function PromptsListPage() {
   const router = useRouter();
