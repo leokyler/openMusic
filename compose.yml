@@ -1,0 +1,14 @@
+services:
+  db-dev:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: dev
+    ports:
+      - "127.0.0.1:15432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/MAJOR/docker
+
+volumes:
+  db_data:

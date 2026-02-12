@@ -34,6 +34,9 @@
 # 安装依赖
 pnpm install
 
+# 启动数据库容器
+docker compose up -d
+
 # 配置环境变量
 cp .env.example .env.local
 # 编辑 .env.local，设置 DATABASE_URL

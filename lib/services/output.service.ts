@@ -2,7 +2,6 @@
  * Output Service
  * 输出关联业务逻辑层
  */
-import { prisma } from '../prisma';
 import type { Output, CreateOutputDto } from '../types/output';
 
 /**
@@ -13,6 +12,9 @@ export class OutputService {
    * 创建输出并关联到提示词
    */
   async createOutput(data: CreateOutputDto): Promise<Output> {
+    // 延迟获取 Prisma 客户端
+    const { prisma } = await import('../prisma');
+
     // 验证提示词存在
     const prompt = await prisma.prompt.findUnique({
       where: { id: data.promptId },
@@ -39,6 +41,9 @@ export class OutputService {
    * 获取提示词的所有输出
    */
   async getOutputsByPromptId(promptId: string): Promise<Output[]> {
+    // 延迟获取 Prisma 客户端
+    const { prisma } = await import('../prisma');
+
     const outputs = await prisma.output.findMany({
       where: { promptId },
       orderBy: { createdAt: 'desc' },
@@ -79,5 +84,5 @@ export class OutputService {
   }
 }
 
-// 导出单例
+// 导出单例（也在运行时初始化）
 export const outputService = new OutputService();
