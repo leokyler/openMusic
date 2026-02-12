@@ -1,0 +1,174 @@
+openapi: 3.0.3
+info:
+  title: Prompt Copy Tracking API
+  description: |
+    API 端点用于追踪提示词复制操作，记录匿名使用指标（复制次数、最后复制时间）。
+  version: 1.0.0
+  contact:
+    name: openMusic Project
+    url: https://github.com/anomalyco/openMusic
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+  - url: https://api.openmusic.example.com
+    description: Production server
+
+paths:
+  /api/prompts/{id}/copy:
+    post:
+      summary: 记录提示词复制操作
+      description: |
+        当用户点击"复制提示词"按钮后，前端异步调用此端点以记录复制操作。
+        该操作是异步的，不影响用户体验（复制操作即使失败也不阻塞）。
+
+        **隐私保证**：不记录用户身份信息（无用户 ID、session、IP），仅统计提示词级别的使用指标。
+
+        **并发安全**：使用数据库原子操作确保计数准确性，即使多个用户同时复制同一提示词。
+      operationId: trackPromptCopy
+      tags:
+        - Prompts
+        - Copy Tracking
+      security:
+        - {}
+
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 提示词的唯一标识符（CUID）
+          schema:
+            type: string
+            format: cuid
+            example: 'clx123abc456def789'
+
+      responses:
+        '200':
+          description: 复制追踪记录成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CopyTrackingResponse'
+              examples:
+                success_first_copy:
+                  summary: 首次复制提示词
+                  value:
+                    success: true
+                    copy_count: 1
+                    last_copied_at: '2026-02-12T10:30:45.123Z'
+                success_subsequent_copy:
+                  summary: 再次复制已复制的提示词
+                  value:
+                    success: true
+                    copy_count: 5
+                    last_copied_at: '2026-02-12T14:22:18.789Z'
+
+        '400':
+          description: 请求格式错误（无效的 CUID 格式）
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Invalid prompt ID format'
+                details: 'ID must be a valid CUID string'
+
+        '404':
+          description: 提示词不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Prompt not found'
+                details: 'No prompt exists with the provided ID'
+
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Internal server error'
+                details: 'Failed to update copy tracking metrics'
+
+      x-code-samples:
+        - lang: JavaScript
+          label: Fetch API
+          source: |
+            // 前端在复制成功后异步调用（不阻塞用户操作）
+            async function trackCopy(promptId) {
+              try {
+                const response = await fetch(`/api/prompts/${promptId}/copy`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                });
+
+                if (response.ok) {
+                  const data = await response.json();
+                  console.log('Copy tracked:', data.copy_count);
+                } else {
+                  // 静默失败，不影响用户体验
+                  console.warn('Failed to track copy');
+                }
+              } catch (error) {
+                // 追踪失败，用户无感知
+                console.warn('Network error tracking copy:', error);
+              }
+            }
+
+            // 在复制按钮点击处理程序中调用
+            copyButton.addEventListener('click', async () => {
+              await copyToClipboard(promptText);
+              showToast('已复制到剪贴板');
+              trackCopy(promptId); // 异步调用，不 await
+            });
+
+components:
+  schemas:
+    CopyTrackingResponse:
+      type: object
+      required:
+        - success
+        - copy_count
+        - last_copied_at
+      properties:
+        success:
+          type: boolean
+          description: 追踪操作是否成功
+          example: true
+        copy_count:
+          type: integer
+          minimum: 1
+          description: |
+            该提示词被复制的总次数（本次操作后的值）。
+            这是一个绝对值，不是增量值。
+          example: 5
+        last_copied_at:
+          type: string
+          format: date-time
+          description: 最后一次复制的 UTC 时间戳（ISO 8601 格式）
+          example: '2026-02-12T10:30:45.123Z'
+
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: 人类可读的错误消息
+          example: 'Prompt not found'
+        details:
+          type: string
+          description: 额外的错误详情（可选）
+          example: 'No prompt exists with the provided ID'
+
+tags:
+  - name: Prompts
+    description: 与提示词相关的操作
+  - name: Copy Tracking
+    description: 使用追踪和分析相关操作
