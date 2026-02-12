@@ -4,12 +4,13 @@
  * PromptForm 组件
  * 创建/编辑提示词的表单
  */
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ValidationAlert } from './validation-alert';
 import { QualityBadge } from './quality-badge';
+import { CopyPromptButton } from './copy-prompt-button';
 import type { VocalParams, InstrumentalParams } from '@/lib/types/prompt';
 import type { CreatePromptDto } from '@/lib/types/prompt';
 
@@ -22,6 +23,10 @@ interface PromptFormProps {
   submitLabel?: string;
   /** 是否正在提交 */
   isSubmitting?: boolean;
+  /** 是否显示复制按钮 */
+  showCopyButton?: boolean;
+  /** 复制按钮数据变化的回调 */
+  onCopyDataChange?: (data: Partial<CreatePromptDto>) => void;
 }
 
 export function PromptForm({
@@ -29,6 +34,8 @@ export function PromptForm({
   initialValues = {},
   submitLabel = '创建提示词',
   isSubmitting = false,
+  showCopyButton = false,
+  onCopyDataChange,
 }: PromptFormProps) {
   // 表单状态
   const [lyrics, setLyrics] = useState(initialValues.lyrics || '');
@@ -65,6 +72,68 @@ export function PromptForm({
 
   // 质量评分预览
   const qualityScore = warnings.length === 0 ? 'high' : warnings.length <= 2 ? 'medium' : 'low';
+
+  // 构建当前表单数据的回调（用于复制按钮）
+  const getCurrentFormData = useCallback((): CreatePromptDto => {
+    const vocal: VocalParams | null =
+      vocalTimbre || vocalStyle
+        ? {
+            gender: vocalGender,
+            timbre: vocalTimbre || undefined,
+            style: vocalStyle || undefined,
+          }
+        : null;
+
+    const instrumental: InstrumentalParams | null =
+      instruments || bpm
+        ? {
+            instruments: instruments
+              ? instruments.split(',').map((s: string) => s.trim())
+              : undefined,
+            bpm: bpm || undefined,
+          }
+        : null;
+
+    return {
+      lyrics: lyrics || null,
+      style: style || null,
+      vocal,
+      instrumental,
+    };
+  }, [lyrics, style, vocalGender, vocalTimbre, vocalStyle, instruments, bpm]);
+
+  // 通知父组件数据已变化（用于复制按钮）
+  useEffect(() => {
+    if (onCopyDataChange) {
+      const vocal: VocalParams | null =
+        vocalTimbre || vocalStyle
+          ? {
+              gender: vocalGender,
+              timbre: vocalTimbre || undefined,
+              style: vocalStyle || undefined,
+            }
+          : null;
+
+      const instrumental: InstrumentalParams | null =
+        instruments || bpm
+          ? {
+              instruments: instruments
+                ? instruments.split(',').map((s: string) => s.trim())
+                : undefined,
+              bpm: bpm || undefined,
+            }
+          : null;
+
+      const data: Partial<CreatePromptDto> = {
+        lyrics: lyrics || null,
+        style: style || null,
+        vocal,
+        instrumental,
+      };
+
+      onCopyDataChange(data);
+    }
+  }, [lyrics, style, vocalGender, vocalTimbre, vocalStyle, instruments, bpm, onCopyDataChange]);
 
   // 表单提交
   const handleSubmit = async (e: React.FormEvent) => {
@@ -104,6 +173,13 @@ export function PromptForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* 复制按钮（可选） */}
+      {showCopyButton && (
+        <div className="flex justify-end mb-4">
+          <CopyPromptButton prompt={getCurrentFormData()} variant="with-label" />
+        </div>
+      )}
+
       {/* 质量评分预览 */}
       {warnings.length > 0 && (
         <div className="flex items-center gap-2">
@@ -217,17 +293,16 @@ export function PromptForm({
             <Input
               id="bpm"
               type="number"
-              min={40}
-              max={240}
               value={bpm}
               onChange={(e) => setBpm(parseInt(e.target.value) || 120)}
+              placeholder="120"
             />
           </div>
         </div>
       </div>
 
       {/* 提交按钮 */}
-      <div className="flex justify-end gap-3">
+      <div className="flex justify-between items-center gap-4">
         <Button type="submit" disabled={isSubmitting || !hasRequiredContent}>
           {isSubmitting ? '提交中...' : submitLabel}
         </Button>

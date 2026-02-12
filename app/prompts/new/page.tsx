@@ -7,19 +7,17 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { PromptForm } from '@/components/prompt/prompt-form';
-import { CopyPromptButton } from '@/components/prompt/copy-prompt-button';
 import type { CreatePromptDto } from '@/lib/types/prompt';
+import type { Prompt } from '@/lib/types/prompt';
 
 export default function NewPromptPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [createdPrompt, setCreatedPrompt] = useState<any>(null);
-  const [formData, setFormData] = useState<Partial<CreatePromptDto>>({});
+  const [createdPrompt, setCreatedPrompt] = useState<Prompt | null>(null);
 
   // 表单提交处理
   const handleSubmit = async (data: CreatePromptDto) => {
-    setFormData(data);
     setIsSubmitting(true);
     setError(null);
 
@@ -78,19 +76,7 @@ export default function NewPromptPage() {
 
       {/* 提示词表单 */}
       <div className="bg-white p-6 rounded-lg border shadow-sm">
-        <PromptForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
-        <div className="mt-4 flex justify-end">
-          <CopyPromptButton
-            prompt={{
-              id: undefined,
-              lyrics: formData.lyrics || null,
-              style: formData.style || null,
-              vocal: formData.vocal || null,
-              instrumental: formData.instrumental || null,
-            }}
-            variant="with-label"
-          />
-        </div>
+        <PromptForm onSubmit={handleSubmit} isSubmitting={isSubmitting} showCopyButton={true} />
       </div>
 
       {/* 使用提示 */}
