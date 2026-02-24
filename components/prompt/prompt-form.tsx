@@ -201,7 +201,7 @@ export function PromptForm({
       {/* 歌词输入 */}
       <div className="space-y-2">
         <label htmlFor="lyrics" className="block text-sm font-medium">
-          歌词（支持章节标签如 [Verse]、[Chorus]）
+          歌词（支持章节标签如 [verse]、[chorus]）
           <span className="text-gray-500 ml-2">{lyricsCount} / 3500 字符</span>
         </label>
         <Textarea
