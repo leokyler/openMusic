@@ -2,7 +2,12 @@
  * 质量评分算法
  * 基于规则引擎计算提示词质量分数
  */
-import type { VocalParams, InstrumentalParams, QualityScore } from '../types/prompt';
+import {
+  LyricSectionTags,
+  type VocalParams,
+  type InstrumentalParams,
+  type QualityScore,
+} from '../types/prompt';
 
 /**
  * 质量评分结果
@@ -15,33 +20,15 @@ export interface QualityScoreResult {
   warnings: string[];
 }
 
-/**
- * 章节标签列表
- */
-const SECTION_TAGS = [
-  '[Verse]',
-  '[Chorus]',
-  '[Bridge]',
-  '[Intro]',
-  '[Outro]',
-  '[Pre-Chorus]',
-  '[Hook]',
-  '[Break]',
-  '[Solo]',
-  '[Drop]',
-  '[Build-Up]',
-  '[Verse 1]',
-  '[Verse 2]',
-  '[Verse 3]',
-  '[Chorus 1]',
-  '[Chorus 2]',
-];
+const SECTION_TAGS = Object.values(LyricSectionTags);
+const SECTION_TAGS_DISPLAY = SECTION_TAGS.map((t) => `[${t.toLowerCase()}]`).join('、');
 
 /**
  * 计算歌词中的章节标签数量
  */
 function countSectionTags(lyrics: string): number {
-  const count = SECTION_TAGS.filter((tag) => lyrics.includes(tag)).length;
+  const lyricsLower = lyrics.toLowerCase();
+  const count = SECTION_TAGS.filter((tag) => lyricsLower.includes(tag.toLowerCase())).length;
   return count;
 }
 
@@ -100,7 +87,7 @@ export function calculateQualityScore(
   // 生成警告信息（仅针对缺失的可选元素）
   if (!lyrics) warnings.push('建议添加歌词以提高生成质量');
   else if (countSectionTags(lyrics) === 0)
-    warnings.push('缺少章节标签，建议使用 [Verse]、[Chorus] 等');
+    warnings.push(`缺少歌词章节标签，建议使用 ${SECTION_TAGS_DISPLAY} 等`);
   if (!style) warnings.push('建议添加风格描述');
   if (!vocal) warnings.push('建议添加人声参数');
   if (!instrumental) warnings.push('建议添加器乐配置');

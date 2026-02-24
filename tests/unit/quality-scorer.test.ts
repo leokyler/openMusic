@@ -52,14 +52,18 @@ describe('Quality Scorer', () => {
       );
 
       expect(result.score).toBe('medium');
-      expect(result.warnings).toContain('缺少章节标签，建议使用 [Verse]、[Chorus] 等');
+      expect(result.warnings).toContain(
+        '缺少歌词章节标签，建议使用 [intro]、[verse]、[pre-chorus]、[chorus]、[hook]、[drop]、[bridge]、[solo]、[build-up]、[instrumental]、[breakdown]、[break]、[interlude]、[outro] 等'
+      );
     });
 
     it('应该给低质量提示词评分 low', () => {
       const result = calculateQualityScore('只有简单的歌词内容', null, null, null);
 
       expect(result.score).toBe('low');
-      expect(result.warnings).toContain('缺少章节标签，建议使用 [Verse]、[Chorus] 等');
+      expect(result.warnings).toContain(
+        '缺少歌词章节标签，建议使用 [intro]、[verse]、[pre-chorus]、[chorus]、[hook]、[drop]、[bridge]、[solo]、[build-up]、[instrumental]、[breakdown]、[break]、[interlude]、[outro] 等'
+      );
       expect(result.warnings).toContain('建议添加风格描述');
       expect(result.warnings).toContain('建议添加人声参数');
       expect(result.warnings).toContain('建议添加器乐配置');
@@ -78,7 +82,30 @@ Chorus text`,
       );
 
       expect(result.score).toBe('medium');
-      expect(result.warnings).not.toContain('缺少章节标签，建议使用 [Verse]、[Chorus] 等');
+      expect(result.warnings).not.toContain(
+        '缺少歌词章节标签，建议使用 [intro]、[verse]、[pre-chorus]、[chorus]、[hook]、[drop]、[bridge]、[solo]、[build-up]、[instrumental]、[breakdown]、[break]、[interlude]、[outro] 等'
+      );
+    });
+
+    it('应该忽略大小写检测章节标签', () => {
+      const result = calculateQualityScore(
+        `[verse]
+lowercase verse
+
+[CHORUS]
+UPPERCASE CHORUS
+
+[Intro]
+Mixed Case`,
+        null,
+        null,
+        null
+      );
+
+      expect(result.score).toBe('medium');
+      expect(result.warnings).not.toContain(
+        '缺少歌词章节标签，建议使用 [intro]、[verse]、[pre-chorus]、[chorus]、[hook]、[drop]、[bridge]、[solo]、[build-up]、[instrumental]、[breakdown]、[break]、[interlude]、[outro] 等'
+      );
     });
 
     it('应该警告超长歌词', () => {

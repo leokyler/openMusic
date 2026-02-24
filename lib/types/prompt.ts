@@ -4,6 +4,26 @@
  */
 
 /**
+ * 歌词章节列表
+ */
+export enum LyricSectionTags {
+  Intro = 'Intro',
+  Verse = 'Verse',
+  PreChorus = 'Pre-chorus',
+  Chorus = 'Chorus',
+  Hook = 'Hook',
+  Drop = 'Drop',
+  Bridge = 'Bridge',
+  Solo = 'Solo',
+  BuildUp = 'Build-up',
+  Instrumental = 'Instrumental',
+  Breakdown = 'Breakdown',
+  Break = 'Break',
+  Interlude = 'Interlude',
+  Outro = 'Outro',
+}
+
+/**
  * 人声参数配置
  */
 export interface VocalParams {
