@@ -13,28 +13,33 @@ datasource db {
  * Prompt 模型 - 音乐生成提示词
  */
 model Prompt {
-  id               String       @id @default(uuid())
-  version          String       @default("1.0.0")
+  id      String @id @default(uuid())
+  version String @default("1.0.0")
 
   // 四个主要组件
-  lyrics           String?      @db.Text
-  style            String?      @db.Text
-  vocal            Json?
-  instrumental     Json?
+  lyrics       String? @db.Text
+  style        String? @db.Text
+  vocal        Json?
+  instrumental Json?
 
   // 质量元数据
-  qualityScore     QualityScore @map("quality_score")
-  qualityWarnings  Json         @default("[]") @map("quality_warnings")
+  qualityScore    QualityScore @map("quality_score")
+  qualityWarnings Json         @default("[]") @map("quality_warnings")
+
+  // 复制追踪字段
+  copyCount    Int       @default(0) @map("copy_count")
+  lastCopiedAt DateTime? @map("last_copied_at")
 
   // 关联
-  outputs          Output[]
+  outputs Output[]
 
   // 审计字段
-  createdAt        DateTime     @default(now()) @map("created_at")
-  updatedAt        DateTime     @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([createdAt(sort: Desc)])
   @@index([qualityScore])
+  @@index([copyCount(sort: Desc)])
   @@map("prompts")
 }
 
@@ -42,17 +47,17 @@ model Prompt {
  * Output 模型 - 音频输出关联
  */
 model Output {
-  id                String   @id @default(uuid())
-  promptId          String   @map("prompt_id")
+  id       String @id @default(uuid())
+  promptId String @map("prompt_id")
 
-  audioUrl          String   @map("audio_url") @db.VarChar(500)
-  modelVersion      String   @map("model_version") @default("Music-2.5") @db.VarChar(50)
-  generationParams  Json     @default("{}") @map("generation_params")
+  audioUrl         String @map("audio_url") @db.VarChar(500)
+  modelVersion     String @default("Music-2.5") @map("model_version") @db.VarChar(50)
+  generationParams Json   @default("{}") @map("generation_params")
 
   // 关联
-  prompt            Prompt   @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  prompt Prompt @relation(fields: [promptId], references: [id], onDelete: Cascade)
 
-  createdAt         DateTime @default(now()) @map("created_at")
+  createdAt DateTime @default(now()) @map("created_at")
 
   @@index([promptId])
   @@index([createdAt(sort: Desc)])
