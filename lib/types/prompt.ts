@@ -82,6 +82,12 @@ export interface Prompt {
   /** 质量警告列表 */
   qualityWarnings: string[];
 
+  /** 复制次数 */
+  copyCount: number;
+
+  /** 最后复制时间 */
+  lastCopiedAt: Date | null;
+
   /** 关联的输出列表（可选） */
   outputs?: Output[];
 

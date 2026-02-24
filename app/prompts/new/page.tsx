@@ -8,12 +8,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { PromptForm } from '@/components/prompt/prompt-form';
 import type { CreatePromptDto } from '@/lib/types/prompt';
+import type { Prompt } from '@/lib/types/prompt';
 
 export default function NewPromptPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [createdPrompt, setCreatedPrompt] = useState<any>(null);
+  const [createdPrompt, setCreatedPrompt] = useState<Prompt | null>(null);
 
   // 表单提交处理
   const handleSubmit = async (data: CreatePromptDto) => {
@@ -75,7 +76,7 @@ export default function NewPromptPage() {
 
       {/* 提示词表单 */}
       <div className="bg-white p-6 rounded-lg border shadow-sm">
-        <PromptForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+        <PromptForm onSubmit={handleSubmit} isSubmitting={isSubmitting} showCopyButton={true} />
       </div>
 
       {/* 使用提示 */}

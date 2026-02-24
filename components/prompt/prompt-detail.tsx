@@ -7,6 +7,7 @@
 import { useState } from 'react';
 import { ValidationAlert } from './validation-alert';
 import { QualityBadge } from './quality-badge';
+import { CopyPromptButton } from './copy-prompt-button';
 import { OutputList } from '../output/output-list';
 import { OutputForm } from '../output/output-form';
 import type { Prompt, Output } from '@/lib/types/prompt';
@@ -60,10 +61,13 @@ export function PromptDetail({ prompt }: PromptDetailProps) {
   return (
     <div className="space-y-6">
       {/* 头部信息 */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">提示词详情</h2>
-          <div className="flex items-center gap-3 text-sm text-gray-600">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-2xl font-bold text-gray-900">提示词详情</h2>
+            <CopyPromptButton prompt={prompt} variant="icon-only" />
+          </div>
+          <div className="flex items-center gap-3 text-sm text-gray-600 flex-wrap">
             <span>版本: {prompt.version}</span>
             <span>•</span>
             <span>创建于 {new Date(prompt.createdAt).toLocaleString('zh-CN')}</span>
@@ -71,6 +75,16 @@ export function PromptDetail({ prompt }: PromptDetailProps) {
               <>
                 <span>•</span>
                 <span>更新于 {new Date(prompt.updatedAt).toLocaleString('zh-CN')}</span>
+              </>
+            )}
+            {(prompt as any).copyCount > 0 && (
+              <>
+                <span>•</span>
+                <span>
+                  已复制 {(prompt as any).copyCount} 次
+                  {(prompt as any).lastCopiedAt &&
+                    `，最后复制于 ${new Date((prompt as any).lastCopiedAt).toLocaleString('zh-CN')}`}
+                </span>
               </>
             )}
           </div>
@@ -120,6 +134,11 @@ export function PromptDetail({ prompt }: PromptDetailProps) {
           </pre>
         </div>
       )}
+
+      {/* 复制按钮（底部） */}
+      <div className="flex justify-end">
+        <CopyPromptButton prompt={prompt} variant="with-label" />
+      </div>
 
       {/* 关联输出部分 */}
       <div className="bg-white p-5 rounded-lg border">
