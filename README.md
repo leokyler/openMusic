@@ -6,6 +6,10 @@
 [![Next.js](https://img.shields.io/badge/Next.js-16.1-black)](https://nextjs.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
+## Minimax Audio Tutorial
+
+[Minimax Audio Tutorial](https://catnip-shrimp-ddd.notion.site/Minimax-Audio-Tutorial-23309b780289800f88f4e5f0b1f7fa6a)
+
 ## 功能特性
 
 - ✅ **提示词管理**：创建、查看列表、查看详情
