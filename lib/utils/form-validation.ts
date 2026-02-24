@@ -2,7 +2,7 @@
  * 表单验证逻辑
  * 前端和后端验证规则
  */
-import type { VocalParams, InstrumentalParams } from '../types/prompt';
+import { LyricSectionTags, type VocalParams, type InstrumentalParams } from '../types/prompt';
 
 /**
  * 验证提示词表单数据
@@ -53,9 +53,12 @@ export function validatePromptForm(data: PromptFormData): ValidationResult {
     }
 
     // 检查章节标签（警告）
-    const hasSectionTags = /\[(Verse|Chorus|Bridge|Intro|Outro|Pre-Chorus|Hook)/i.test(data.lyrics);
-    if (!hasSectionTags && data.lyrics.length > 20) {
-      warnings.push('缺少章节标签，建议使用 [Verse]、[Chorus] 等');
+    const sectionTags = Object.values(LyricSectionTags).map((t) => t.toLowerCase());
+    const lyricsLower = data.lyrics.toLowerCase();
+    const hasSectionTag = sectionTags.some((tag) => lyricsLower.includes(tag));
+    const sectionTagsDisplay = sectionTags.map((t) => `[${t}]`).join('、');
+    if (!hasSectionTag && data.lyrics.length > 20) {
+      warnings.push(`缺少歌词章节标签，建议使用 ${sectionTagsDisplay} 等`);
     }
   }
 

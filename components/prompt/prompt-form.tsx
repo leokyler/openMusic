@@ -13,6 +13,7 @@ import { QualityBadge } from './quality-badge';
 import { CopyPromptButton } from './copy-prompt-button';
 import type { VocalParams, InstrumentalParams } from '@/lib/types/prompt';
 import type { CreatePromptDto } from '@/lib/types/prompt';
+import { LyricSectionTags } from '@/lib/types/prompt';
 
 interface PromptFormProps {
   /** 表单提交处理 */
@@ -58,10 +59,16 @@ export function PromptForm({
   const hasRequiredContent = lyrics.trim().length > 0 || style.trim().length > 0;
 
   // 验证警告（实时预览，仅用于提示）
+  const sectionTags = Object.values(LyricSectionTags);
+  const sectionTagsLower = sectionTags.map((t) => t.toLowerCase());
+  const lyricsLower = lyrics.toLowerCase();
+  const hasSectionTag = sectionTagsLower.some((tag) => lyricsLower.includes(tag));
+  const sectionTagsDisplay = sectionTagsLower.map((t) => `[${t}]`).join('、');
+
   const warnings = [
     !hasRequiredContent ? '歌词和风格不能同时为空' : null,
-    lyricsCount > 0 && !lyrics.includes('[Verse]') && !lyrics.includes('[Chorus]')
-      ? '缺少章节标签，建议使用 [Verse]、[Chorus] 等'
+    lyricsCount > 0 && !hasSectionTag
+      ? `缺少歌词章节标签，建议使用 ${sectionTagsDisplay} 等`
       : null,
     lyricsCount > 3500 ? '歌词超过 3500 字符，可能影响生成' : null,
     styleCount > 2000 ? '风格描述超过 2000 字符' : null,

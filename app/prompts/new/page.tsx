@@ -84,7 +84,10 @@ export default function NewPromptPage() {
         <h3 className="font-medium text-blue-900 mb-2">使用提示</h3>
         <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
           <li>至少需要填写歌词或风格描述</li>
-          <li>使用章节标签（如 [Verse]、[Chorus]）可以提高生成质量</li>
+          <li>
+            使用章节标签（如
+            [intro]、[verse]、[pre-chorus]、[chorus]、[hook]、[drop]、[bridge]、[solo]、[build-up]、[instrumental]、[breakdown]、[break]、[interlude]、[outro]）可以提高生成质量
+          </li>
           <li>系统会给出质量建议，但有警告也可以保存</li>
           <li>创建后可以查看详情并关联音频输出</li>
         </ul>

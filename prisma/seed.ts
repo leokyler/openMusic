@@ -45,7 +45,10 @@ async function main() {
       lyrics: '简单的歌词，没有章节标签',
       style: 'Rock, Electric Guitar',
       qualityScore: QualityScore.medium,
-      qualityWarnings: ['缺少章节标签，建议使用 [Verse]、[Chorus] 等', '建议添加器乐配置'],
+      qualityWarnings: [
+        '缺少歌词章节标签，建议使用 [intro]、[verse]、[pre-chorus]、[chorus]、[hook]、[drop]、[bridge]、[solo]、[build-up]、[instrumental]、[breakdown]、[break]、[interlude]、[outro] 等',
+        '建议添加器乐配置',
+      ],
     },
   });
 
@@ -58,7 +61,7 @@ async function main() {
       lyrics: '只有简单的歌词内容',
       qualityScore: QualityScore.low,
       qualityWarnings: [
-        '缺少章节标签，建议使用 [Verse]、[Chorus] 等',
+        '缺少歌词章节标签，建议使用 [intro]、[verse]、[pre-chorus]、[chorus]、[hook]、[drop]、[bridge]、[solo]、[build-up]、[instrumental]、[breakdown]、[break]、[interlude]、[outro] 等',
         '建议添加风格描述',
         '建议添加人声参数',
         '建议添加器乐配置',
